@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>edit_post</title>
+</head>
+<script>
+
+</script>
+
+<body>
+    <button onclick="window.location.href = '{% url 'posts.select' post.pk %}';">
+        돌아가기
+    </button>
+    <br>
+    <form action="{% url 'posts.edit' post.pk %}" method="post">
+        {% csrf_token %}
+        <label>TITLE :</label><br>
+        <input type="text" name="title" value="{{post.title}}" />
+        <br>
+        <label>CONTENT :</label><br>
+        <input type="text" name="content" value="{{post.content}}" />
+        <br>
+        <input type="submit" value="수정하기" />
+    </form>
+</body>
+
+</html>

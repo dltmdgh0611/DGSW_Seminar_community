@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>create_post</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <button onclick="window.location.href = '{% url 'main' %}';">
+        돌아가기
+    </button>
+    <br>
+    <form action="{% url 'posts.create' %}" method="post">
+        {% csrf_token %}
+        <label>TITLE :</label><br>
+        <input type="text" name="title" />
+        <br>
+        <label>CONTENT :</label><br>
+        <input type="text" name="content" />
+        <br>
+        <input type="submit" value="게시하기" />
+    </form>
+</body>
+
+</html>

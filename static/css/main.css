@@ -1,0 +1,22 @@
+.list{
+    width: 800px;
+    height: 80px;
+    margin: 20px auto;
+}
+.list>div>.post-title{
+    padding-top: 15px;
+    color: black;
+}
+.list>div>.post-time{
+    color: gray;
+}
+.cont{
+    padding-left: 10px;
+    text-align: left;
+}
+.list>li{
+    float: right;
+    padding-right: 10px;
+    padding-top: 25px;
+    width: 100px;
+}
