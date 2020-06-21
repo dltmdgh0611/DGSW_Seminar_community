@@ -1,22 +1,36 @@
-.context{
-    width: 800px;
-    height: auto;
-    margin: 20px auto;
-    background-color: white;
-    border: 1px solid #cccccc;
-    border-radius: 10px;
-    padding :20px;
+a{
+    text-decoration: none;
 }
-.context>h1{
-    margin: 10 0px;
+a,span{
+    color: gray;
+}
+a:hover,span:hover{
+    text-decoration: none;
+    color: black;
+}
+.flag-div{
+    float: left;
+    padding: 2 9px;
+    border-radius: 16px;
+    border: 1px solid #959595;
+    border-color: rgba(185,185,185,0.5);
+}
+.bic{
+    margin-top: 6px;
+    margin-left: 5px;
 }
 
-.comment{
-    width: fit-content;
-    height: 70px;
-    margin: 10 0px;
-    background-color: #f5f6fa;
-    border-radius: 10px;
-    flex-wrap: wrap;
-    float: left;
+.form-control.cms{
+    height: 24px;
+    font-size: 16px;
+    color: #202020;
+    resize: none;
+    outline: 0 none;
+    line-height: 24px;
+    overflow: hidden;
+    letter-spacing: -.4px;
+    min-height: 50px; 
+}
+.btn.bhi{
+    height: 50px;
 }

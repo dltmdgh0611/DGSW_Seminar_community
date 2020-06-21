@@ -1,0 +1,26 @@
+.tts{
+    width: 100%;
+    height: 56px;
+    border: none;
+    font-size: 30px;
+    color: #202020;
+    resize: none;
+    outline: 0 none;
+    line-height: 40px;
+    overflow: hidden;
+    letter-spacing: -.4px;
+}
+
+.cts{
+    width: 100%;
+    height: 56px;
+    border: none;
+    font-size: 16px;
+    color: #202020;
+    resize: none;
+    outline: 0 none;
+    line-height: 24px;
+    overflow: hidden;
+    letter-spacing: -.4px;
+    min-height: 50px; 
+}
