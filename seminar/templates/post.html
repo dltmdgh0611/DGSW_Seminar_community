@@ -57,7 +57,10 @@
     $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
     });
-
+    function resize(obj) {
+        obj.style.height = "1px";
+        obj.style.height = (12+obj.scrollHeight)+"px";
+    }
 </script>
 
 <body style="background-color: #f8f9fa;">
@@ -124,7 +127,7 @@
             <form action="{% url 'posts.comments.create' post.pk%}" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
-                    <textarea type="text" class="form-control cms" name="content" placeholder="Write your comment"></textarea>
+                    <textarea type="text" class="form-control cms" name="content" placeholder="Write your comment"onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                         <div class="input-group-btn">
                             <button class="btn bhi" type="submit"style="border: solid 1px #ccc;">
                                 <svg class="bi bi-capslock-fill" width="24px" height="24px" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -146,7 +149,7 @@
                 </a>
                 {% endif %}
                 <br>
-                <a>{{ comment.comment_content }}</a>
+                <a>{{ comment.comment_content | linebreaksbr  }}</a>
             </div>
             <hr>
             {% empty %}
