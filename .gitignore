@@ -48,5 +48,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-venv
+.venv
+.env
 .idea
