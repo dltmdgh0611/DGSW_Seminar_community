@@ -1,2 +1,2 @@
-from .comment_create import *
-from .comment_select import *
+from .create import *
+from .select import *

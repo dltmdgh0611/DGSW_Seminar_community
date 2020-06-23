@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import *
-from .views import posts
+from .views import category, posts
 from .views.posts import comments
 
 urlpatterns = [
@@ -21,5 +21,4 @@ urlpatterns = [
     path('posts/<int:index>/vote', posts.vote, name="posts.vote"),
 
     path('comment/<int:index>', posts.comments.select, name='posts.comments.select'),
-
 ]

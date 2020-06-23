@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from seminar.models import PostRecruitSeminar
+from ..models.category import PostOfFreeSeminar
 
 
 def main(req):
-    return render(req, 'main.html')
+    return render(req, 'main.html', {'post': PostOfFreeSeminar.objects.all()})
