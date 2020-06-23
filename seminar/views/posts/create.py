@@ -13,9 +13,6 @@ def create(req):
         post.writer = req.user
         post.title = req.POST['title']
         post.content = req.POST['content']
-        post.start_at = req.POST['start_at']
-        post.end_at = req.POST['end_at']
-        post.class_count = req.POST['class_count']
         data = set()
         for value in req.POST.getlist('tag_kind'):
             if ',' in value:

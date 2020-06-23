@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
-from seminar.models import post_request_seminar
+from seminar.models import PostRequestSeminar
 
 
 def req(req):
-    context = {'posts': post_request_seminar.objects.order_by('-created_at')}
+    context = {'posts': PostRequestSeminar.objects.order_by('-created_at')}
     return render(req, 'req.html', context)

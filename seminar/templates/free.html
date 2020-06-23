@@ -3,8 +3,8 @@
 {% block content %}
     <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">강의 게시 / 수강생 모집</h1>
-        <p class="lead">강의를 올려 수강생을 모집해보세요.</p>
+        <h1 class="display-4">자유게시판</h1>
+        <p class="lead">학교에 관한 소식을 올려주세요.</p>
     </div>
     </div>
     {% if posts %}
@@ -18,7 +18,7 @@
                     {% if '학년' in tag%}
                         <span class="badge badge-secondary">
                         {{tag}}
-                        </span>
+                        </span>s
                     {% else %}
                         <span class="badge badge-success">
                         {{tag}}
@@ -36,4 +36,3 @@
     <p>게시글 없음</p>
     {% endif %}
 {% endblock %}
-
