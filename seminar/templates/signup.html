@@ -1,0 +1,42 @@
+{% extends 'nav.html' %}
+
+
+
+{% block content %}
+
+    <head>
+        <link rel="stylesheet" href="http://127.0.0.1/static/css/signup.css">
+    </head>
+    <form class="form-signin card bg-white p-5" action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="text-center mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+            <p><code>학생 전문가 특강</code>을 위한 <br> 계정을 생성해 주세요. <br>
+        </div>
+
+        <div class="form-label-group">
+            <input name="id" type="text" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+            <label for="inputEmail">Email address</label>
+        </div>
+
+        <div class="form-label-group">
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <label for="inputPassword">Password</label>
+        </div>
+
+        <div class="form-label-group">
+            <input name="cpassword" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <label for="inputPassword">Confirm Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+            <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 text-muted text-center">© 2020-2020</p>
+    </form>
+
+
+{% endblock %}
