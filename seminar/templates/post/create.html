@@ -1,0 +1,101 @@
+{% extends 'navigator/navigator.html' %}
+
+{% block content %}
+<script>
+$(function() {
+     $("input:text").keydown(function(evt) { if (evt.keyCode == 13) return false; }); 
+});
+
+function resize(obj) {
+  obj.style.height = "1px";
+  obj.style.height = (12+obj.scrollHeight)+"px";
+}
+
+$(document).ready(function() {
+    $("#bttn1").click(function(){
+        $("#bttn1").addClass('disabled');
+        $("#bttn2").removeClass('disabled');
+        $("#bttn3").removeClass('disabled');
+        $("#content-req").collapse('show')
+    });
+    $("#bttn2").click(function(){
+        $("#bttn1").removeClass('disabled');
+        $("#bttn2").addClass('disabled');
+        $("#bttn3").removeClass('disabled');
+        $("#content-req").collapse('show')
+    });
+    $("#bttn3").click(function(){
+        $("#bttn1").removeClass('disabled');
+        $("#bttn2").removeClass('disabled');
+        $("#bttn3").addClass('disabled');
+        $("#content-req").collapse('hide')
+    });
+});
+
+</script>
+<head>
+    <link rel="stylesheet" href="http://127.0.0.1/static/css/create.css">
+</head>
+
+
+<div class="my-5 p-5 rounded bg-white shadow-sm container">
+    <form action="{% url 'posts.create' %}" method="post">
+        {% csrf_token %}
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary">
+                <input type="radio" name="category" id="bttn1" value="request_seminar" checked> 강의 요청
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="category" id="bttn2" value="recruit_seminar"> 강의 게시
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="category" id="bttn3" value="free" checked> 자유게시판
+            </label>
+        </div>
+        <div class="card card-body mb-5">
+            <h4 class="mb-3"> 태그 : </h4>
+            <select class="form-control mb-4" name="tag_kind">
+                <option>Web</option>
+                <option>Android</option>
+                <option>Window</option>
+                <option>Embedded</option>
+                <option>Design</option>
+                <option>Know-how</option>
+                <option>ETC</option>
+            </select>
+            <div class="collapse show" id="content-req">
+                <h4 class="mb-3"> 타겟 학년 : </h4>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1학년" name="tag_kind">
+                    <label class="form-check-label" for="inlineCheckbox1" name="tag_kind">1학년</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="2학년" name="tag_kind">
+                    <label class="form-check-label" for="inlineCheckbox2" name="tag_kind">2학년</label>
+                </div>
+                <div class="form-check form-check-inline mb-4">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="3학년" name="tag_kind">
+                    <label class="form-check-label" for="inlineCheckbox3">3학년</label>
+                </div>
+                <h4 class="mb-3"> 수업 일정 : </h4>
+                <div class="inline mb-4">
+                    <input type="date" name="start_at"></input> ~
+                    <input type="date" name="end_at"></input></div>
+                <h4 class="mb-3"> 차시 수 : </h4>
+                <div class="inline">
+                    <input type="text" class="trs" name="class_count"
+                           onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></input> 차시
+                </div>
+            </div>
+        </div>
+
+        <input class="tts" type="text" name="title" placeholder="TITLE"></input>
+        <br>
+        <hr>
+        <textarea class="cts" onkeydown="resize(this)" onkeyup="resize(this)" type="text" name="content"
+                  placeholder="CONTENT"></textarea>
+        <br>
+        <input type="submit" class="btn btn-dark" value="게시하기"></input>
+    </form>
+</div>
+{% endblock %}

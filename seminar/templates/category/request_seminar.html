@@ -1,10 +1,10 @@
-{% extends 'nav.html' %}
+{% extends 'navigator/navigator.html' %}
 
 {% block content %}
     <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">강의 게시 / 수강생 모집</h1>
-        <p class="lead">강의를 올려 수강생을 모집해보세요.</p>
+        <h1 class="display-4">강의 요청</h1>
+        <p class="lead">듣고 싶은 강의를 올려주세요.</p>
     </div>
     </div>
     {% if posts %}
@@ -12,7 +12,7 @@
         <div class="m-3">
             {% for post in posts %}
             <div class="card m-3 p-3 shadow-sm" style="cursor: pointer;"
-                onclick=" location.href = '{% url 'posts.select' post.pk %}';">
+                onclick=" location.href = '{% url 'posts.select' 'free' post.pk %}';">
                 <h4 class="card-title">{{ post.title }}
                     {% for tag in post.get_tags %}
                     {% if '학년' in tag%}
@@ -36,4 +36,3 @@
     <p>게시글 없음</p>
     {% endif %}
 {% endblock %}
-
