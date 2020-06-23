@@ -24,3 +24,11 @@
     letter-spacing: -.4px;
     min-height: 50px; 
 }
+
+input[type=date]{
+    width: 200px;
+}
+
+input[type=text].trs{
+    width: 40px;
+}

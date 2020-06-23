@@ -10,6 +10,8 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
 
+    path('req/', posts.req, name='posts.req'),
+    path('rec/', posts.rec, name='posts.rec'),
     path('posts/create', posts.create, name='posts.create'),
     path('posts/<int:index>', posts.select, name='posts.select'),
     # path('posts/<int:index>/votes', posts.vote, name='posts.vote'),

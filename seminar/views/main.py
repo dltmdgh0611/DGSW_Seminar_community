@@ -1,8 +1,7 @@
 from django.shortcuts import render
 
-from ..models import Post
+from seminar.models import PostRecruitSeminar
 
 
 def main(req):
-    context = {'posts': Post.objects.all()}
-    return render(req, 'main.html', context)
+    return render(req, 'main.html')

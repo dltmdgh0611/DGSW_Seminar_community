@@ -7,10 +7,11 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <script src="static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/bootstrap.min.js"></script>
 
 </head>
+
 <body style="background-color: #f8f9fa;">
 <div class="navbar navbar-dark bg-dark shadow-sm navbar-expand-lg">
     <div class="container d-flex justify-content-between px-5">
@@ -45,13 +46,43 @@
         {% endif %}
     </div>
 </div>
-
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">학생 전문가 특강 Seminar</h1>
-        <p class="lead">원하는 강의를 게시글로 올려주세요.</p>
+        <h1 class="display-4">강의 게시 / 수강생 모집</h1>
+        <p class="lead">강의를 올려 수강생을 모집해보세요.</p>
     </div>
 </div>
+{% if posts %}
+{% if '학년' in post.tag_kind %}
+<div class="container">
+    <div class="m-3">
+        {% for post in posts %}
+        <div class="card m-3 p-3 shadow-sm" style="cursor: pointer;"
+             onclick=" location.href = '{% url 'posts.select' post.pk %}';">
+            <h4 class="card-title">{{ post.title }}
+                {% for tag in post.get_tags %}
+                {% if '학년' in tag%}
+                    <span class="badge badge-secondary">
+                    {{tag}}
+                    </span>
+                {% else %}
+                    <span class="badge badge-success">
+                    {{tag}}
+                    </span>
+                {% endif %}
+                {% endfor %}
+            </h4>
+            <h5 class="card-subtitle mb-2 text-muted">{{post.created_at}}-{{post.writer.username}}</h5>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% else %}
+<p>게시글 없음</p>
+{% endif %}
 
 </body>
+
 </html>

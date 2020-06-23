@@ -8,61 +8,60 @@
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/post.css">
     <script src="../static/js/bootstrap.min.js"></script>
-
+    <script src="../static/js/post.js"></script>
 </head>
 <script>
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
-        return cookieValue;
     }
+    return cookieValue;
+}
 
-    async function deletePost() {
-        console.log("start");
-        const res = await fetch("{% url 'posts.select' post.pk %}", {
-            credentials: 'include',
-            method: 'DELETE',
-            mode: 'same-origin',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-        });
-        const json = res.json();
-        if (!res.ok) alert('삭제에 실패했습니다.')
-        else window.location.href = '{% url 'main' %}';
-    }
-    async function deleteComment(url) {
-        const res = await fetch(url, {
-            credentials: 'include',
-            method: 'DELETE',
-            mode: 'same-origin',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-        });
-        const json = res.json();
-        window.location.href = '{% url 'posts.select' post.pk %}';
-    }
-
-    $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
+async function deletePost() {
+    console.log("start");
+    const res = await fetch("{% url 'posts.select' post.pk %}", {
+        credentials: 'include',
+        method: 'DELETE',
+        mode: 'same-origin',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        },
     });
-    function resize(obj) {
-        obj.style.height = "1px";
-        obj.style.height = (12+obj.scrollHeight)+"px";
-    }
-</script>
+    const json = res.json();
+    if (!res.ok) alert('삭제에 실패했습니다.')
+    else window.location.href = "{% url 'main' %}";
+}
+async function deleteComment(url) {
+    const res = await fetch(url, {
+        credentials: 'include',
+        method: 'DELETE',
+        mode: 'same-origin',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+    });
+    const json = res.json();
+    window.location.href = "{% url 'posts.select' post.pk %}";
+}
 
+$(document).ready(function(){
+$('[data-toggle="tooltip"]').tooltip();
+});
+function resize(obj) {
+    obj.style.height = "1px";
+    obj.style.height = (12+obj.scrollHeight)+"px";
+}
+</script>
 <body style="background-color: #f8f9fa;">
     <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container d-flex justify-content-between px-5">
@@ -88,9 +87,20 @@
             {% endif %}
         </div>
     </div>
-
     <div class="my-5 p-5 rounded bg-white shadow-sm container">
-        <h1 class=" pb-2 mb-0">{{ post.title }}</h1>
+        <h1 class=" pb-2 mb-0">{{ post.title }}
+                {% for tag in post.get_tags %}
+                {% if '학년' in tag%}
+                    <span class="badge badge-secondary">
+                    {{tag}}
+                    </span>
+                {% else %}
+                    <span class="badge badge-success">
+                    {{tag}}
+                    </span>
+                {% endif %}
+                {% endfor %}
+        </h1>
         <a><strong>Post </strong>{{ post.created_at }}<strong> {{post.writer.username}}</strong>님 작성</a>
         {% if post.writer.username == user.username %}
         <div class="text-right mb-2">
@@ -116,7 +126,7 @@
                 {% endif %}
                 <a class="mx-2">{{post.vote_count}}</a>
             </div>
-            <span data-toggle="tooltip" data-placement="top" title="강의 개설은 플래그 5개 이상부터 이루어집니다.">
+            <span data-toggle="tooltip" data-placement="top" title="이게 뭔가요? (나도 그렇게 생각해 플래그)입니다.">
                 <svg class="bi bi-question-circle bic" width="20px" height="20px" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
