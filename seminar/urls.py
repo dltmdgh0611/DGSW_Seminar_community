@@ -10,15 +10,15 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
 
-    path('req/', posts.req, name='posts.req'),
-    path('rec/', posts.rec, name='posts.rec'),
-    path('free/', posts.free, name='posts.free'),
+    path('request/', category.request_seminar, name='category.request_seminar'),
+    path('recruit/', category.recruit_seminar, name='category.recruit_seminar'),
+    path('free/', category.free, name='category.free'),
     path('posts/create', posts.create, name='posts.create'),
-    path('posts/<int:index>', posts.select, name='posts.select'),
+    path('posts/<str:category>/<int:index>', posts.select, name='posts.select'),
     # path('posts/<int:index>/votes', posts.vote, name='posts.vote'),
-    path('posts/<int:index>/edit', posts.edit, name='posts.edit'),
-    path('posts/<int:index>/comments', posts.comments.create, name='posts.comments.create'),
-    path('posts/<int:index>/vote', posts.vote, name="posts.vote"),
+    path('posts/<str:category>/<int:index>/edit', posts.edit, name='posts.edit'),
+    path('posts/<str:category>/<int:index>/comments', posts.comments.create, name='posts.comments.create'),
+    path('posts/<str:category>/<int:index>/vote', posts.vote, name="posts.vote"),
 
-    path('comment/<int:index>', posts.comments.select, name='posts.comments.select'),
+    path('comment/<str:category>/<int:index>', posts.comments.select, name='posts.comments.select'),
 ]

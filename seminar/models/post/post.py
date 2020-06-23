@@ -1,7 +1,10 @@
 from django.db import models
 
+from .link import Link
+
 
 class Post(models.Model):
+    link = models.ForeignKey(Link, models.PROTECT, blank=False)
     title = models.CharField(blank=False, max_length=60)
     content = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)

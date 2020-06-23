@@ -5,4 +5,4 @@ from seminar.models.category import PostOfFreeSeminar
 
 def free(req):
     context = {'posts': PostOfFreeSeminar.objects.all()}
-    return render(req, 'category/recruit_seminar.html', context)
+    return render(req, 'category/free.html', context)

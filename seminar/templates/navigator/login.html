@@ -1,0 +1,25 @@
+{% extends 'navigator/navigator.html' %}
+
+
+{% block content %}
+    <head>
+        <link rel="stylesheet" href="http://127.0.0.1/static/css/login.css">
+    </head>
+    <div class="form d-flex justify-content-center align-items-center " style="min-height: calc(100vh - 56px);">
+        <form style=" width: 100%; max-width: 430px;" class="card bg-white p-5" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 font-weight-normal form-signin">Please sign in</h1>
+            <label class="sr-only">Email address</label>
+            <input type="text" class="form-control" placeholder="Email address" required="" autofocus="" name="username" >
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password">
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">© 2020-2020</p>
+        </form>
+    </div>
+{% endblock %}

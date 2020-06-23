@@ -6,7 +6,7 @@ from seminar.models.category.post_of_recruit_seminar import PostOfRecruitSeminar
 
 
 @login_required
-def select(req, index: int):
+def select(req, category: str, index: int):
     if req.method == 'GET':
         post = PostOfRecruitSeminar.objects.get(pk=index)
         context = {'post': post, 'comments': post.comments.all(), 'recommends': post.recommends.filter(user=req.user)}
