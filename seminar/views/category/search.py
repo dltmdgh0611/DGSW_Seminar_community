@@ -13,15 +13,33 @@ def search(req):
             if link.namespace == 'PostOfRequestSeminar':
                 post = PostOfRequestSeminar.objects.get(link=link)
                 if req.POST['word'] in post.title:
-                    posts.append({'pk': post.id, 'title': post.title, 'category': 'request_seminar'})
+                    posts.append(
+                        {'pk': post.id, 'title': post.title, 'category': 'request_seminar', 'tags': post.get_tags, 'created_at':post.created_at})
+                elif '#' in req.POST['word']:
+                    str1 = req.POST['word']
+                    str1 = str1.replace("#", "")
+                    print(str1 + "1")
+                    if str1 in post.tag_kind:
+                        print("1")
+                        posts.append(
+                            {'pk': post.id, 'title': post.title, 'category': 'request_seminar', 'tags': post.get_tags, 'created_at':post.created_at})
             elif link.namespace == 'PostOfRecruitSeminar':
                 post = PostOfRecruitSeminar.objects.get(link=link)
                 if req.POST['word'] in post.title:
-                    posts.append({'pk': post.id, 'title': post.title, 'category': 'recruit_seminar'})
+                    posts.append(
+                        {'pk': post.id, 'title': post.title, 'category': 'recruit_seminar', 'tags': post.get_tags, 'created_at':post.created_at})
+                elif '#' in req.POST['word']:
+                    str2 = req.POST['word']
+                    str2 = str2.replace("#", "")
+                    print(str2 + "2")
+                    if str2 in post.tag_kind:
+                        print("2")
+                        posts.append(
+                            {'pk': post.id, 'title': post.title, 'category': 'recruit_seminar', 'tags': post.get_tags, 'created_at':post.created_at})
             elif link.namespace == 'PostOfFreeSeminar':
                 post = PostOfFreeSeminar.objects.get(link=link)
                 if req.POST['word'] in post.title:
-                    posts.append({'pk': post.id, 'title': post.title, 'category': 'free_seminar'})
+                    posts.append({'pk': post.id, 'title': post.title, 'category': 'free_seminar', 'created_at':post.created_at})
 
         context = {'posts': posts}
         return render(req, 'category/search.html', context)

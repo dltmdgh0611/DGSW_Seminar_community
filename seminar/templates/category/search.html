@@ -9,16 +9,16 @@
             <div class="card m-3 p-3 shadow-sm" style="cursor: pointer;"
                 onclick=" location.href = '{% url 'posts.select' post.category post.pk %}';">
                 <h4 class="card-title">{{ post.title }}
-                    {% for tag in post.get_tags %}
-                    {% if '학년' in tag%}
-                        <span class="badge badge-secondary">
-                        {{tag}}
-                        </span>
-                    {% else %}
-                        <span class="badge badge-success">
-                        {{tag}}
-                        </span>
-                    {% endif %}
+                    {% for tag in post.tags %}
+                        {% if '학년' in tag%}
+                            <span class="badge badge-secondary">
+                            {{tag}}
+                            </span>
+                        {% else %}
+                            <span class="badge badge-success">
+                            {{tag}}
+                            </span>
+                        {% endif %}
                     {% endfor %}
                 </h4>
                 <h5 class="card-subtitle mb-2 text-muted">{{post.created_at}}-{{post.link.writer}}</h5>
