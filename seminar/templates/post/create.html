@@ -17,18 +17,21 @@ $(document).ready(function() {
         $("#bttn2").removeClass('disabled');
         $("#bttn3").removeClass('disabled');
         $("#content-req").collapse('show')
+        $("select").prop('disabled', false);
     });
     $("#bttn2").click(function(){
         $("#bttn1").removeClass('disabled');
         $("#bttn2").addClass('disabled');
         $("#bttn3").removeClass('disabled');
-        $("#content-req").collapse('show')
+        $("#content-req").collapse('hide')
+        $("select").prop('disabled', false);
     });
     $("#bttn3").click(function(){
         $("#bttn1").removeClass('disabled');
         $("#bttn2").removeClass('disabled');
         $("#bttn3").addClass('disabled');
         $("#content-req").collapse('hide')
+        $("select").prop('disabled', true);
     });
 });
 
@@ -43,13 +46,13 @@ $(document).ready(function() {
         {% csrf_token %}
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-secondary">
-                <input type="radio" name="category" id="bttn1" value="request_seminar" checked> 강의 요청
+                <input type="radio" name="category" id="bttn1" value="recruit_seminar" checked> 강의 게시
             </label>
             <label class="btn btn-secondary">
-                <input type="radio" name="category" id="bttn2" value="recruit_seminar"> 강의 게시
+                <input type="radio" name="category" id="bttn2" value="request_seminar" > 강의 요청
             </label>
             <label class="btn btn-secondary">
-                <input type="radio" name="category" id="bttn3" value="free" checked> 자유게시판
+                <input type="radio" name="category" id="bttn3" value="free" > 자유게시판
             </label>
         </div>
         <div class="card card-body mb-5">
