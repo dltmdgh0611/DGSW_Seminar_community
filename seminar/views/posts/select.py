@@ -32,5 +32,7 @@ def select(req, category: str, index: int):
             post = get_object_or_404(PostOfFreeSeminar, id=index)
         else:
             return HttpResponse(status=404)
+        link = post.link
         post.delete()
+        link.delete()
         return JsonResponse({}, status=200)

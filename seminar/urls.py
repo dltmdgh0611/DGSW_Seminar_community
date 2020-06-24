@@ -13,6 +13,7 @@ urlpatterns = [
     path('request_seminar/', category.request_seminar, name='category.request_seminar'),
     path('recruit_seminar/', category.recruit_seminar, name='category.recruit_seminar'),
     path('free/', category.free, name='category.free'),
+    path('search/', category.search, name='category.search'),
     path('posts/create', posts.create, name='posts.create'),
     path('posts/<str:category>/<int:index>', posts.select, name='posts.select'),
     # path('posts/<int:index>/votes', posts.recommend, name='posts.recommend'),

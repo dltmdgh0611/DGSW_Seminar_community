@@ -8,5 +8,8 @@ from seminar.models import Comment
 @login_required
 def select(req, index):
     if req.method == 'DELETE':
-        get_object_or_404(Comment, pk=index).delete()
+        comment = get_object_or_404(Comment, pk=index)
+        link = comment.link
+        comment.delete()
+        link.delete()
         return JsonResponse({}, status=200)
