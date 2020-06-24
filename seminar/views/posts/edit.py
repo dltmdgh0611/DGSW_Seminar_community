@@ -23,17 +23,17 @@ def edit(req, category, index):
     elif req.method == 'POST':
         if req.POST['category'] == 'request_seminar':
             post = get_object_or_404(PostOfRequestSeminar, id=index)
-            post.title = req.POST['title']
+            post.namespace = req.POST['title']
             post.content = req.POST['content']
             post.tag_kind = get_tag_string(req.POST)
         elif req.POST['category'] == 'recruit_seminar':
             post = get_object_or_404(PostOfRecruitSeminar, id=index)
-            post.title = req.POST['title']
+            post.namespace = req.POST['title']
             post.content = req.POST['content']
             post.tag_kind = get_tag_string(req.POST)
         elif req.POST['category'] == 'free':
             post = get_object_or_404(PostOfFreeSeminar, id=index)
-            post.title = req.POST['title']
+            post.namespace = req.POST['title']
             post.content = req.POST['content']
         else:
             return HttpResponse(status=404)

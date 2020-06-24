@@ -6,4 +6,9 @@ class Link(models.Model):
     uuid = models.UUIDField(primary_key=True)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, 'wrote_post')
 
-    title = models.CharField(blank=False, max_length=60)
+    namespace = models.CharField(blank=False, max_length=60)
+
+    @property
+    def get_uuid(self):
+        print(str(self.uuid))
+        return str(self.uuid)

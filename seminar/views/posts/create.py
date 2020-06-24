@@ -47,6 +47,7 @@ def create(req):
             post = PostOfFreeSeminar()
             post.title = req.POST['title']
             post.content = req.POST['content']
+        link.namespace = post.__class__.__name__
         post.link = link
 
         link.save()

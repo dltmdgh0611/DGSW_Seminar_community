@@ -18,7 +18,7 @@ def select(req, category: str, index: int):
             post = get_object_or_404(PostOfFreeSeminar, id=index)
         else:
             return HttpResponse(status=404)
-
+        post.update_vote_count()
         context = {'post': post, 'comments': post.link.comments.all(),
                    'recommends': post.link.recommends.filter(user=req.user), 'category': category}
         return render(req, 'post/view.html', context)
