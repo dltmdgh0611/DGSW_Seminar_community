@@ -10,8 +10,8 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
 
-    path('request/', category.request_seminar, name='category.request_seminar'),
-    path('recruit/', category.recruit_seminar, name='category.recruit_seminar'),
+    path('request_seminar/', category.request_seminar, name='category.request_seminar'),
+    path('recruit_seminar/', category.recruit_seminar, name='category.recruit_seminar'),
     path('free/', category.free, name='category.free'),
     path('posts/create', posts.create, name='posts.create'),
     path('posts/<str:category>/<int:index>', posts.select, name='posts.select'),

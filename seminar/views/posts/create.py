@@ -3,10 +3,11 @@ import uuid
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from seminar.models.category.post_of_free_seminar import PostOfFreeSeminar
 from seminar.models.category.post_of_recruit_seminar import PostOfRecruitSeminar
 from seminar.models.category.post_of_request_seminar import PostOfRequestSeminar
-from seminar.models.category.post_of_free_seminar import PostOfFreeSeminar
 from seminar.models.post.link import Link
+
 
 def get_tag_string(POST):
     data = set()
@@ -23,13 +24,12 @@ def get_tag_string(POST):
         text += value
     return text
 
+
 @login_required
 def create(req):
     if req.method == 'GET':
         return render(req, 'post/create.html')
     elif req.method == 'POST':
-
-        print(req.POST)
         link = Link()
         link.uuid = uuid.uuid4()
         link.writer = req.user
@@ -48,7 +48,6 @@ def create(req):
             post.title = req.POST['title']
             post.content = req.POST['content']
         post.link = link
-
 
         link.save()
         post.save()

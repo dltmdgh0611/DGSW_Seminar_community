@@ -20,7 +20,7 @@ function getCookie(name) {
 
 async function deletePost() {
     console.log("start");
-    const res = await fetch("{% url 'posts.select' post.pk %}", {
+    const res = await fetch("{% url 'posts.select' category post.pk %}", {
         credentials: 'include',
         method: 'DELETE',
         mode: 'same-origin',
@@ -42,7 +42,7 @@ async function deleteComment(url) {
         },
     });
     const json = res.json();
-    window.location.href = "{% url 'posts.select' post.pk %}";
+    window.location.href = "{% url 'posts.select' category post.pk %}";
 }
 
 $(document).ready(function(){
@@ -60,6 +60,7 @@ function resize(obj) {
 
 <div class="my-5 p-5 rounded bg-white shadow-sm container">
     <h1 class=" pb-2 mb-0">{{ post.title }}
+        {% if post.get_tags %}
         {% for tag in post.get_tags %}
         {% if '학년' in tag%}
         <span class="badge badge-secondary">
@@ -71,19 +72,20 @@ function resize(obj) {
                     </span>
         {% endif %}
         {% endfor %}
+        {% endif %}
     </h1>
     <a><strong>Post </strong>{{ post.created_at }}<strong> {{post.writer.username}}</strong>님 작성</a>
-    {% if post.writer.username == user.username %}
+    {% if post.link.writer == user %}
     <div class="text-right mb-2">
         <span onclick="deletePost()" style="cursor: pointer;" class="mr-3">삭제하기</span>
-        <a href="{% url 'posts.edit' post.pk %}" class="mr-5" style="">수정하기</a>
+        <a href="{% url 'posts.edit' category post.pk %}" class="mr-5" style="">수정하기</a>
     </div>
     {% endif %}
     <div class="media-body pb-5 pt-5 lh-125 border-top border-gray">
         {{ post.content | linebreaksbr }}
     </div>
     <div class="align-items-center">
-        <div class="flag-div" onclick="location.href = '{% url 'posts.vote' post.pk %}';" style="cursor: pointer;">
+        <div class="flag-div" onclick="location.href = '{% url 'posts.vote' category post.pk %}';" style="cursor: pointer;">
             {% if recommends %}
             <svg class="bi bi-flag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
                  xmlns="http://www.w3.org/2000/svg">
@@ -111,7 +113,7 @@ function resize(obj) {
             </span>
     </div>
     <hr>
-    <form action="{% url 'posts.comments.create' post.pk%}" method="POST">
+    <form action="{% url 'posts.comments.create' category post.pk%}" method="POST">
         {% csrf_token %}
         <div class="input-group">
             <textarea type="text" class="form-control cms" name="content" placeholder="Write your comment"
@@ -134,7 +136,7 @@ function resize(obj) {
         <a>{{comment.comment_date}}</a>
         <strong> {{comment.comment_writer}} </strong>
         {% if comment.comment_writer == user %}
-        <a onclick="deleteComment('{% url 'posts.comments.select' comment.pk %}');" style="cursor: pointer;">
+        <a onclick="deleteComment('{% url 'posts.comments.select' category comment.pk %}');" style="cursor: pointer;">
             삭제
         </a>
         {% endif %}
