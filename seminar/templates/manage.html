@@ -22,10 +22,12 @@ const seminars = {{seminars}};
 const durations = {{durations}};
 const btn_colors = ['btn-primary', 'btn-success', 'btn-danger', 'btn-warning', 'btn-info'];
 
+var last_hold_seminar_index = -1;
 var main_table = {};
 
 function on_hold_in(seminar_index) {
     const seminar = seminars[seminar_index];
+    last_hold_seminar_index =  seminar_index;
     for (let date in main_table)
     {
         let row = main_table[date];
@@ -33,19 +35,38 @@ function on_hold_in(seminar_index) {
         {
             row.row.addClass('text-muted');
             row.row.find('a').addClass('text-muted');
+            for (const date of durations)
+            {
+                row[date].node.addClass('bg-secondary');
+            }
         }
         else
         {
             let duration_code = 0;
-            for (const date of durations)
+            for (const duration of durations)
             {
                 if (seminar.available_duration_codes.find(k => k == duration_code) == undefined)
                 {
-                    row[date].addClass('bg-secondary');
+                    row[duration].node.addClass('bg-secondary');
                 }
                 else
                 {
-                    row[date].removeClass('bg-secondary');
+                    row[duration].node.removeClass('bg-secondary');
+                    for (const room in rooms)
+                    {
+                        if (row[duration][room].html() == '·')
+                        {
+                            row[duration][room].removeClass('bg-secondary');
+                            row[duration][room][0].ondragover = (ev) => {ev.preventDefault()};
+                            row[duration][room][0].ondrop = on_drop_down(date, duration, room);
+                        }
+                        else
+                        {
+                            row[duration][room].addClass('bg-secondary');
+                            row[duration][room][0].ondragover = undefined;
+                            row[duration][room][0].ondrop = undefined;
+                        }
+                    }
                 }
                 duration_code += 1;
             }
@@ -62,12 +83,21 @@ function on_hold_out() {
         row.row.removeClass('text-muted');
         row.row.find('a').removeClass('text-muted');
 
-        let duration_code = 0;
-        for (const date of durations)
-        {
-            row[date].removeClass('bg-secondary');
-            duration_code += 1;
-        }
+        for (const duration of durations) {
+            row[duration].node.removeClass('bg-secondary');
+             for (const room in rooms) {
+                row[duration][room].removeClass('bg-secondary');
+             }
+         }
+
+    }
+}
+
+function on_drop_down(date, duration, room) {
+    return (ev) => {
+        ev.preventDefault();
+
+        main_table[date][duration][room][0].innerText = seminars[last_hold_seminar_index].name;
     }
 }
 
@@ -80,11 +110,17 @@ function unfold_class_table(index) {
 
 $( document ).ready(function() {
     let desk = $('#desk');
+    {
+        let button = $('<button type="button" class="btn btn-lg my-2 btn-danger disabled active">');
+        button.append('<img src="/static/svg/trash.svg" width="24px" height="24px" style="fill: white;">');
+        desk.append(button);
+    }
+
     let k = 0;
     for (let seminar of seminars)
     {
         let row = $('<div class="d-flex flex-row align-self-center">');
-        row.append('<button type="button" data-toggle="collapse" aria-expanded="false" class="btn btn-lg my-2 ' + btn_colors[seminar.id % btn_colors.length] + '" draggable="true" ondragstart="on_hold_in(' + k + ')" ondragend="on_hold_out()")>' + seminar.name + '</button>');
+        row.append('<button type="button" data-toggle="collapse" aria-expanded="false" class="btn btn-lg my-2 ' + btn_colors[seminar.id % btn_colors.length] + '" draggable="true" ondragstart="on_hold_in(' + k + ')" ondragend="on_hold_out()") value="' + seminar.name + '">' + seminar.name + '×' + seminar.times_of_class + '<br/>' + seminar.people_count + '명</button>');
         let subscription = $('<div class="my-auto" style="max-width: 20vw;">');
         for (let tag of seminar.tags)
         {
@@ -126,13 +162,14 @@ $( document ).ready(function() {
             for (const duration of durations)
             {
                 let trow = $('<tr class="d-none plan_per_class' + date_y + '">');
+                table_per_class[duration] = {node: trow};
                 trow.append('<td class="p-3 border">' + duration + '</td>');
-                for (const x in rooms)
+                for (const room in rooms)
                 {
                     let cell = $('<td class="p-3 border">·</td>');
                     trow.append(cell);
+                    table_per_class[duration][room] = cell;
                 }
-                table_per_class[duration] = trow;
                 table.append(trow);
             }
         }
@@ -141,6 +178,7 @@ $( document ).ready(function() {
 
     }
 });
+
 
 
 

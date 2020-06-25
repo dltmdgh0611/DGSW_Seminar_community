@@ -30,9 +30,13 @@ def manage(req, *args, **kwargs):
         date += datetime.timedelta(days=1)
 
     for planned_seminar in PlannedSeminar.objects.all():
-        seminars.append({'name': planned_seminar.title, 'id': planned_seminar.id,
-                         'tags': name_of_weekdays + durations, 'available_weekday_codes': [0, 1, 2, 3, 4],
-                         'available_duration_codes': [1, 3]})
+        seminars.append({'name': planned_seminar.title,
+                         'id': planned_seminar.id,
+                         'tags': name_of_weekdays + durations,
+                         'available_weekday_codes': [0, 1, 2, 3, 4],
+                         'available_duration_codes': [1, 3],
+                         'people_count': len(planned_seminar.post.link.recommends.all()),
+                         'times_of_class': planned_seminar.post.times_of_class})
 
     for room in RoomForSeminar.objects.all():
         rooms.append(
