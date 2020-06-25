@@ -8,7 +8,9 @@ class Link(models.Model):
 
     namespace = models.CharField(blank=False, max_length=60)
 
+    def __str__(self):
+        return f'Link({self.uuid})'
+
     @property
     def get_uuid(self):
-        print(str(self.uuid))
         return str(self.uuid)

@@ -20,7 +20,8 @@ def select(req, category: str, index: int):
             return HttpResponse(status=404)
         post.update_vote_count()
         context = {'post': post, 'comments': post.link.comments.all(),
-                   'recommends': post.link.recommends.filter(user=req.user), 'category': category}
+                   'recommends': post.link.recommends.filter(user=req.user), 'category': category,
+                   'is_seminar_manager': req.user.groups.filter(name='manage_seminar').exists()}
         return render(req, 'post/view.html', context)
     elif req.method == 'DELETE':
         post = None

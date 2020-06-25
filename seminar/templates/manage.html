@@ -1,0 +1,150 @@
+{% extends 'navigator/navigator.html' %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">관리자 페이지</h1>
+    </div>
+</div>
+<div class="container d-flex justify-content-between">
+    <div id="desk" class="border p-3 text-center d-flex flex-column">
+    </div>
+    <div class="d-flex overflow-auto flex-fill" style="max-height: 60vh;">
+        <table id="table" class="border mx-auto text-center">
+        </table>
+    </div>
+</div>
+<script>
+const all_available_tags = {{all_available_tags}};
+const binding_date = {{binding_date}};
+const rooms = {{rooms}};
+const seminars = {{seminars}};
+const durations = {{durations}};
+const btn_colors = ['btn-primary', 'btn-success', 'btn-danger', 'btn-warning', 'btn-info'];
+
+var main_table = {};
+
+function on_hold_in(seminar_index) {
+    const seminar = seminars[seminar_index];
+    for (let date in main_table)
+    {
+        let row = main_table[date];
+        if (seminar.available_weekday_codes.find(k => k == row.date[5]) == undefined)
+        {
+            row.row.addClass('text-muted');
+            row.row.find('a').addClass('text-muted');
+        }
+        else
+        {
+            let duration_code = 0;
+            for (const date of durations)
+            {
+                if (seminar.available_duration_codes.find(k => k == duration_code) == undefined)
+                {
+                    row[date].addClass('bg-secondary');
+                }
+                else
+                {
+                    row[date].removeClass('bg-secondary');
+                }
+                duration_code += 1;
+            }
+            row.row.removeClass('text-muted');
+            row.row.find('a').removeClass('text-muted');
+        }
+    }
+}
+
+function on_hold_out() {
+    for (let date in main_table)
+    {
+        let row = main_table[date];
+        row.row.removeClass('text-muted');
+        row.row.find('a').removeClass('text-muted');
+
+        let duration_code = 0;
+        for (const date of durations)
+        {
+            row[date].removeClass('bg-secondary');
+            duration_code += 1;
+        }
+    }
+}
+
+function unfold_class_table(index) {
+    if ($('.plan_per_class' + index).hasClass('d-none'))
+        $('.plan_per_class' + index).removeClass('d-none').addClass('d-print-table-row');
+   else
+       $('.plan_per_class' + index).addClass('d-none').removeClass('d-print-table-row');
+}
+
+$( document ).ready(function() {
+    let desk = $('#desk');
+    let k = 0;
+    for (let seminar of seminars)
+    {
+        let row = $('<div class="d-flex flex-row align-self-center">');
+        row.append('<button type="button" data-toggle="collapse" aria-expanded="false" class="btn btn-lg my-2 ' + btn_colors[seminar.id % btn_colors.length] + '" draggable="true" ondragstart="on_hold_in(' + k + ')" ondragend="on_hold_out()")>' + seminar.name + '</button>');
+        let subscription = $('<div class="my-auto" style="max-width: 20vw;">');
+        for (let tag of seminar.tags)
+        {
+            subscription.append('<a class="btn disabled btn-outline-dark m-1 p-1 " >' + tag + '</a>');
+        }
+        row.append(subscription);
+        desk.append(row);
+        k += 1;
+    }
+
+    let table = $('#table');
+    {
+        let trow = $('<tr class="bg-dark text-white">');
+        trow.append('<th>시간</th>');
+        for (let room of rooms)
+        {
+            trow.append('<th class="border">' + room.name + '<br/>(' + room.min_people_count + '~' + room.max_people_count + ')</th>');
+        }
+        table.append(trow);
+    }
+
+    let date_y = -1;
+    for (const item of binding_date)
+    {
+        let table_per_class = {};
+        date_y += 1;
+        {
+            let trow = $('<tr class="bg-dark text-white">');
+            table_per_class['row'] = trow;
+            let button = $('<a class="p-3 btn btn-dark" onclick="unfold_class_table(' + date_y + ')">' + item[0] + '</a>');
+            trow.append($('<td class="border font-weight-bold">').append(button));
+
+            trow.append('<td class="p-3 border" colspan="2">' + item[1] + '</td>');
+
+            table.append(trow);
+        }
+            //trow.append('<td class="p-3 border" ondragover="event.preventDefault()" ondrop="console.log(event)"></td>');
+        {
+            for (const duration of durations)
+            {
+                let trow = $('<tr class="d-none plan_per_class' + date_y + '">');
+                trow.append('<td class="p-3 border">' + duration + '</td>');
+                for (const x in rooms)
+                {
+                    let cell = $('<td class="p-3 border">·</td>');
+                    trow.append(cell);
+                }
+                table_per_class[duration] = trow;
+                table.append(trow);
+            }
+        }
+        main_table[item[0]] = table_per_class;
+        main_table[item[0]].date = binding_date[date_y];
+
+    }
+});
+
+
+
+
+
+</script>
+{% endblock %}
