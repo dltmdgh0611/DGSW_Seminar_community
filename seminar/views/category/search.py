@@ -39,6 +39,7 @@ def filter_posts(category: str, posts: list, filter_dict: dict, contain_tags=Fal
     for post in posts:
         if filter_dict['text_query'] in str(post.title):
             block = False
+            block_mention = False
             print('contain_tags', contain_tags)
             if contain_tags:
                 for tag in filter_dict['topics']:
@@ -47,17 +48,17 @@ def filter_posts(category: str, posts: list, filter_dict: dict, contain_tags=Fal
                         break
             elif len(filter_dict['topics']) > 0:
                 block = True
-            if not block:
-                print(str(post.link.writer.username))
-                print(''.join(filter_dict['mentions']))
-                if ''.join(filter_dict['mentions']) == str(post.link.writer.username):
-                    print(str(post.link.writer.username)+"c")
-                    result.append(
-                        {'pk': post.id,
-                         'title': post.title,
-                         'category': category,
-                         'created_at': post.created_at,
-                         'writer': post.link.writer,
-                         'tags': post.get_tags if contain_tags else []
-                         })
+            if ''.join(filter_dict['mentions']) != str(post.link.writer.username):
+                block_mention = True
+                if len(filter_dict['mentions']) == 0:
+                    block_mention = False
+            if not block and not block_mention:
+                result.append(
+                    {'pk': post.id,
+                     'title': post.title,
+                     'category': category,
+                     'created_at': post.created_at,
+                     'writer': post.link.writer,
+                     'tags': post.get_tags if contain_tags else []
+                     })
     return result
