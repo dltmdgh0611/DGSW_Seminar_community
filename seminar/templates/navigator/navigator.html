@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>게시판 연습</title>
+    <title>Seminar</title>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
@@ -20,9 +20,9 @@
     <div class="navbar navbar-dark bg-dark shadow-sm navbar-expand-lg">
         <div class="d-flex justify-content-between px-5">
             <a class="navbar-brand" href="{% url 'main' %}">Seminar</a>
-            <form class="form-inline my-2 my-lg-0" action="{% url 'category.search' %}" method="post">
+            <form class="form-inline my-2 my-lg-0" action="{% url 'category.search' %}" method="GET">
             {% csrf_token %}
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="word">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="s">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             <ul class="navbar-nav">

@@ -74,7 +74,7 @@ function resize(obj) {
         {% endfor %}
         {% endif %}
     </h1>
-    <a><strong>Post </strong>{{ post.created_at }}<strong> {{post.writer.username}}</strong>님 작성</a>
+    <a><strong>Post </strong>{{ post.created_at }}<strong> {{post.link.writer}}</strong>님 작성</a>
     {% if post.link.writer == user %}
     <div class="text-right mb-2">
         <span onclick="deletePost()" style="cursor: pointer;" class="mr-3">삭제하기</span>

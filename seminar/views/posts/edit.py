@@ -19,7 +19,7 @@ def edit(req, category, index):
             post = get_object_or_404(PostOfFreeSeminar, id=index)
         else:
             return HttpResponse(status=404)
-        return render(req, 'post/edit.html', {'post': post})
+        return render(req, 'post/edit.html')
     elif req.method == 'POST':
         if req.POST['category'] == 'request_seminar':
             post = get_object_or_404(PostOfRequestSeminar, id=index)

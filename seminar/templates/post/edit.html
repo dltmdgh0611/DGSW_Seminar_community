@@ -14,7 +14,7 @@ function resize(obj) {
     <link rel="stylesheet" href="http://127.0.0.1/static/css/create.css">
 </head>
     <div class="my-5 p-5 rounded bg-white shadow-sm container">
-        <form action="{% url 'posts.edit' post.pk %}" method="post">
+        <form action="{% url 'posts.edit' category post.pk %}" method="post">
             {% csrf_token %}
             <input class="tts" type="text" name="title" value="{{post.title}}"></input>
             <br>
