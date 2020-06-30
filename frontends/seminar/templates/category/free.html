@@ -1,0 +1,38 @@
+{% extends 'navigator/navigator.html' %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">자유게시판</h1>
+        <p class="lead">학교에 관한 자유로운 이야기를 들려주세요</p>
+    </div>
+</div>
+{% if posts %}
+<div class="container">
+    <div class="m-3">
+        {% for post in posts %}
+        <div class="card m-3 p-3 shadow-sm" style="cursor: pointer;"
+            onclick=" location.href = '{% url 'posts.select' 'free' post.pk %}';">
+            <h4 class="card-title">{{ post.title }}
+                {% for tag in post.get_tags %}
+                {% if '학년' in tag%}
+                <span class="badge badge-secondary">
+                    {{tag}}
+                </span>s
+                {% else %}
+                <span class="badge badge-success">
+                    {{tag}}
+                </span>
+                {% endif %}
+                {% endfor %}
+            </h4>
+            <h5 class="card-subtitle mb-2 text-muted">{{post.created_at}}-{{post.link.writer}}</h5>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<p>게시글 없음</p>
+{% endif %}
+{% endblock %}
