@@ -76,9 +76,9 @@ WSGI_APPLICATION = 'backend_setting.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'seminar',
-        'USER': 'seminar',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test',
+        'USER': 'root',
         'PASSWORD': '12345678',
         'HOST': '127.0.0.1',
         'PORT': ''

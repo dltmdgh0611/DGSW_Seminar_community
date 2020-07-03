@@ -4,10 +4,14 @@ import Container from 'react-bootstrap/Container'
 import Navigator from './Navigator'
 
 class PageOfMain extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
         <div>
-            <Navigator/>
+            <Navigator {...this.props}/>
             <Jumbotron fluid>
             <Container>
                 <h1 className="display-4">학생 전문가 특강 Seminar</h1>

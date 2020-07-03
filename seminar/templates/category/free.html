@@ -6,22 +6,38 @@
     </head>
     <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">강의 요청</h1>
-        <p class="lead">듣고 싶은 강의를 신청해보세요</p>
+        <h1 class="display-4">자유게시판</h1>
+        <p class="lead">학교에 관한 자유로운 이야기를 들려주세요</p>
     </div>
     </div>
+
+
     {% if posts %}
     <div class="container">
+            <div class="ml-3">
+    <div class="border bg-white d-inline-flex ml-3 p-2 shadow-sm">
+        <div class="mr-4 sort" style="cursor: pointer;"><svg class="m-2 bi bi-bar-chart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <rect width="4" height="5" x="1" y="10" rx="1"/>
+            <rect width="4" height="9" x="6" y="6" rx="1"/>
+            <rect width="4" height="14" x="11" y="1" rx="1"/>
+        </svg>New</div>
+        <div class="mr-2 sort" style="cursor: pointer;"><svg class="m-2 bi bi-flag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
+            <path fill-rule="evenodd" d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916A.5.5 0 0 1 3.5 9V3a.5.5 0 0 1 .223-.416l.04-.026z"/>
+        </svg>Hotest</div>
+        
+    </div>
+    </div>
         <div class="m-3">
             {% for post in posts %}
             <div class="card m-3 p-3 shadow-sm" style="cursor: pointer;"
-                onclick=" location.href = '{% url 'posts.select' 'request_seminar' post.pk %}';">
+                onclick=" location.href = '{% url 'posts.select' 'free_seminar' post.pk %}';">
                 <h4 class="card-title">{{ post.title }}
                     {% for tag in post.get_tags %}
                     {% if '학년' in tag%}
                         <span class="badge badge-secondary">
                         {{tag}}
-                        </span>
+                        </span>s
                     {% else %}
                         <span class="badge badge-success">
                         {{tag}}
@@ -37,7 +53,7 @@
                         <path fill-rule="evenodd" d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916A.5.5 0 0 1 3.5 9V3a.5.5 0 0 1 .223-.416l.04-.026z"/>
                     </svg>
                     <h5 class="d-inline mt-1">{{post.vote_count}}</h5>
-                </div>
+                </div>      
             </div>
 
             {% endfor %}

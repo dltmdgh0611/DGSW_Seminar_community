@@ -103,7 +103,7 @@ function resize(obj) {
     <div class="text-right mb-2 d-flex align-items-center">
         <div class="mr-auto">
             {{ post.created_at }}
-            <strong>{{post.writer.username}}</strong>
+            <strong>{{post.link.writer}}</strong>
             님 작성
         </div>
         {% if post.link.writer == user %}

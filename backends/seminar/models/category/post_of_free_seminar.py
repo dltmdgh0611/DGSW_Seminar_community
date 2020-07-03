@@ -2,4 +2,4 @@ from ..post.post import Post
 
 
 class PostOfFreeSeminar(Post):
-    category = 'free'
+    category = 'free_seminar'

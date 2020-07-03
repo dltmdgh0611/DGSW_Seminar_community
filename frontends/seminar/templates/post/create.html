@@ -80,10 +80,14 @@ $(document).ready(function() {
                     <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="3학년" name="tag_kind">
                     <label class="form-check-label" for="inlineCheckbox3">3학년</label>
                 </div>
-                <h4 class="mb-3"> 수업 일정 : </h4>
+                <h4 class="mb-3"> 최소 인원 ~ 최대 인원 : </h4>
                 <div class="inline mb-4">
-                    <input type="date" name="start_at"></input> ~
-                    <input type="date" name="end_at"></input></div>
+                    <input type="text" class="trs" name="min_people_count"
+                           onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></input> 명
+                    ~
+                    <input type="text" class="trs" name="max_people_count"
+                           onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></input> 명
+                </div>
                 <h4 class="mb-3"> 차시 수 : </h4>
                 <div class="inline">
                     <input type="text" class="trs" name="class_count"

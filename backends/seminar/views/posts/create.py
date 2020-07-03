@@ -43,12 +43,17 @@ def create(req):
             post.title = req.POST['title']
             post.content = req.POST['content']
             post.tag_kind = get_tag_string(req.POST)
-        if req.POST['category'] == 'free':
+            post.times_of_class = req.POST['class_count']
+            post.min_people_count = req.POST['min_people_count']
+            post.max_people_count = req.POST['max_people_count']
+        if req.POST['category'] == 'free_seminar':
             post = PostOfFreeSeminar()
             post.title = req.POST['title']
             post.content = req.POST['content']
         link.namespace = post.__class__.__name__
         post.link = link
+
+
 
         link.save()
         post.save()

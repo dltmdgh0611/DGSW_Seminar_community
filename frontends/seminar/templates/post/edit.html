@@ -14,14 +14,15 @@ function resize(obj) {
     <link rel="stylesheet" href="http://127.0.0.1/static/css/create.css">
 </head>
     <div class="my-5 p-5 rounded bg-white shadow-sm container">
-        <form action="{% url 'posts.edit' category post.pk %}" method="post">
+        <form action="{% url 'posts.edit' category post.id %}" method="post">
             {% csrf_token %}
-            <input class="tts" type="text" name="title" value="{{post.title}}"></input>
+            <input hidden name="category" value="{{ category }}"/>
+            <input class="tts" type="text" name="title" value="{{ post.title }}"/>
             <br>
             <hr>
             <textarea class="cts" onkeydown="resize(this)" onkeyup="resize(this)" type="text" name="content">{{ post.content }}</textarea>
             <br>
-            <input type="submit" class="btn btn-dark" value="수정하기"></input>
+            <input type="submit" class="btn btn-dark" value="수정하기"/>
         </form>
     </div>
 {% endblock %}

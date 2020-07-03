@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PageOfMain from './Seminar/PageOfMain' 
-import PageOfFreeSeminar from './Seminar/PageOfFreeSeminar' 
+import PageOfFreeSeminar from './Seminar/View/PageOfFreeSeminar'
+import PageOfRequestSeminar from './Seminar/View/PageOfRequestSeminar' 
+import PageOfRecruitSeminar from './Seminar/View/PageOfRecruitSeminar' 
+import PageOfSearchResults from './Seminar/View/PageOfSearchResults'
 import {
   BrowserRouter as Router,
   Route,
@@ -12,12 +15,11 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/">
-            <PageOfMain/>
-          </Route>
-          <Route path="/free_seminar">
-            <PageOfFreeSeminar/>
-          </Route>
+          <Route exact path="/" component={PageOfMain}/>
+          <Route exact path="/free_seminar" component={PageOfFreeSeminar}/>
+          <Route exact path="/request_seminar" component={PageOfRequestSeminar}/>
+          <Route exact path="/recruit_seminar" component={PageOfRecruitSeminar}/>
+          <Route exact path="/search" component={PageOfSearchResults}/>
           <Route>
             <div>
               알 수 없는 경로입니다.

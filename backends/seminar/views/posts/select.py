@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
-
+from datetime import datetime
 from seminar.models.category import PostOfRequestSeminar, PostOfFreeSeminar
 from seminar.models.category.post_of_recruit_seminar import PostOfRecruitSeminar
 
@@ -14,11 +14,12 @@ def select(req, category: str, index: int):
             post = get_object_or_404(PostOfRequestSeminar, id=index)
         elif category == 'recruit_seminar':
             post = get_object_or_404(PostOfRecruitSeminar, id=index)
-        elif category == 'free':
+        elif category == 'free_seminar':
             post = get_object_or_404(PostOfFreeSeminar, id=index)
         else:
             return HttpResponse(status=404)
         post.update_vote_count()
+        post.save()
         context = {'post': post, 'comments': post.link.comments.all(),
                    'recommends': post.link.recommends.filter(user=req.user), 'category': category,
                    'is_seminar_manager': req.user.groups.filter(name='manage_seminar').exists()}
@@ -29,7 +30,7 @@ def select(req, category: str, index: int):
             post = get_object_or_404(PostOfRequestSeminar, id=index)
         elif category == 'recruit_seminar':
             post = get_object_or_404(PostOfRecruitSeminar, id=index)
-        elif category == 'free':
+        elif category == 'free_seminar':
             post = get_object_or_404(PostOfFreeSeminar, id=index)
         else:
             return HttpResponse(status=404)

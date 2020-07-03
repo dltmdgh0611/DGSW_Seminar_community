@@ -1,0 +1,10 @@
+.list-flag{
+    position: absolute;
+    right: 50px;
+    top: 35px;
+}
+
+.sort:hover{
+    color: gray;
+}
+
