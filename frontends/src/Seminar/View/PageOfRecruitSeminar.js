@@ -14,6 +14,9 @@ const get_posts_of_recruit_seminar = 'query{ postsOfRecruitSeminar { createdAt ,
 class PageOfRecruitSeminar extends Component {  
     constructor(props) {
       super(props);
+      this.state = {
+        postsOfRecruitSeminar:[]
+      }
     }
 
     componentDidMount() {        

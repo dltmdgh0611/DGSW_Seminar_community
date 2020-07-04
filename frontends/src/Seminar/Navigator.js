@@ -28,7 +28,7 @@ class Navigator extends Component {
                     <Form.Row>
                         <Col>
                             <Form.Control type="text" placeholder="Search..." onChange={(e) => {this.search_query = e.target.value}}/>
-                        </Col> ()
+                        </Col>
                         <Col xs="auto">
                             <Button onClick={this.handleSubmit.bind(this)} variant="success" type="submit">Q</Button>
                         </Col>

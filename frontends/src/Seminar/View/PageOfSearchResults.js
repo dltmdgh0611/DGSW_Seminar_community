@@ -51,7 +51,7 @@ class PageOfSearchResults extends Component {
         return (
             <div>
                 <Navigator {...this.props}/>
-                <Container className="m-3">
+                <Container className="p-3">
                 {this.state.search_result.map(post => (
                     <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id}>
                         <Card.Title as="h4" style={{ cursor: "poitner" }}>

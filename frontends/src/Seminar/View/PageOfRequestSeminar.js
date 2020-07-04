@@ -14,6 +14,9 @@ const get_posts_of_request_seminar = 'query{ postsOfRequestSeminar { createdAt ,
 class PageOfRequestSeminar extends Component {  
     constructor(props) {
       super(props);
+      this.state = {
+        postsOfRequestSeminar:[]
+      }
     }
 
     componentDidMount() {        
@@ -31,7 +34,7 @@ class PageOfRequestSeminar extends Component {
         });
     }
     render() {
-        
+        console.log(this.state.postsOfRequestSeminar)
         return (
             <div>
                 <Navigator {...this.props}/>
@@ -42,6 +45,7 @@ class PageOfRequestSeminar extends Component {
                     </Container>
                 </Jumbotron>
                 <Container className="p-3">
+                
                 {this.state.postsOfRequestSeminar.map(post => (
                     <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id}>
                         <Card.Title as="h4">

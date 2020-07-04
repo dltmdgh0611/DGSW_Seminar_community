@@ -8,14 +8,23 @@ import moment from 'moment';
 import 'moment/locale/ko'
 moment.locale('ko')
 
-const get_posts_of_free_seminar = 'query{ postsOfFreeSeminar { createdAt ,title, id } }';
+const get_posts_of_free_seminar = 'query{ search(keyword:""){ title, content, createdAt, namespace, id, uuid, writer} }';
+
 
 class PageOfFreeSeminar extends Component {  
     constructor(props) {
         super(props);
+        this.sss = ""
+        this.state = {
+            postsOfFreeSeminar:[]
+            
+        }
     }
+    
+    
 
     componentDidMount() {        
+        
         axios({
             method: "POST",
             url: "http://localhost:8000/api",
@@ -25,10 +34,19 @@ class PageOfFreeSeminar extends Component {
             headers: {
                 "Access-Control-Allow-Origin": "*",
             }
-        }).then(result => {this.postsOfFreeSeminar = 
-            this.setState({ postsOfFreeSeminar:result.data.data.postsOfFreeSeminar });
+        }).then(result => {
+            
+            this.search = 
+            this.setState({ postsOfFreeSeminar:result.data.data.search });
         });
     }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        console.log(this.sss)
+        this.props.history.push('/postview?v='+ this.sss);
+    }
+
     render() {
         
         return (
@@ -41,13 +59,13 @@ class PageOfFreeSeminar extends Component {
                     </Container>
                 </Jumbotron>
                 <Container className="p-3">
-                {this.state.postsOfFreeSeminar.map(post => (
-                    <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id}>
+                {this.state.postsOfFreeSeminar.filter(postsOfFreeSeminar => postsOfFreeSeminar.namespace.includes('Free')).map(post => (
+                    <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id} onClick={this.handleSubmit.bind(this)} onMouseOver={(e) => {this.sss = post.uuid}}>
                         <Card.Title as="h4">
                         {post.title}
                         </Card.Title>
                         <Card.Text as="h5">
-                            {moment(Date.parse(post.createdAt)).fromNow()}
+                            {moment(Date.parse(post.createdAt)).fromNow()}-{post.writer}
                         </Card.Text>
                     </Card>
                 ))}
