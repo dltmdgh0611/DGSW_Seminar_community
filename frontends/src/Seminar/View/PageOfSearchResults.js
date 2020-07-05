@@ -30,24 +30,29 @@ class PageOfSearchResults extends Component {
     }
 
     componentDidUpdate(prv_prop, pr_state, snapshot) {
+        const keyword = new URLSearchParams(this.props.location.search).get('s')
         if (this.props.location.search != prv_prop.location.search)
         {
-            const keyword = new URLSearchParams(this.props.location.search).get('s')
+            prv_prop = this.props
+            console.log(keyword);
             axios({
                 method: "POST",
                 url: "http://localhost:8000/api",
                 data: {
-                    query: `query{ search(keyword:"${keyword}"){ uuid, id, title, createdAt, tagKind, namespace }}`
+                    
+                    query: `query{ search(keyword:"${keyword}"){ uuid, id, title, createdAt, tagKind, namespace, writer }}`
                 },
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                 }
-            }).then(result => {this.search = 
+            }).then(result => {this.search_result = 
                 this.setState({ search_result:result.data.data.search });
+                console.log(this.state.search_result)
             });
         }
     }
     render() {
+        
         return (
             <div>
                 <Navigator {...this.props}/>
@@ -60,7 +65,7 @@ class PageOfSearchResults extends Component {
                         </Card.Title>
                         <Card.Text as="h5">
                             {post.namespace} /&nbsp;
-                            {moment(Date.parse(post.createdAt)).fromNow()}
+                            {moment(Date.parse(post.createdAt)).fromNow()}/ {post.writer}
                         </Card.Text>
                     </Card>
                 ))}

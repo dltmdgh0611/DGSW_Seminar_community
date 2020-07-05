@@ -37,38 +37,64 @@ class Query(graphene.ObjectType):
     def resolve_search(self, info, **kwargs):
         keyword = kwargs['keyword']
         result = []
-        for post in post_of_free_seminar.PostOfFreeSeminar.objects.filter(title__contains=keyword):
-            result.append(AbstractPost(
-                title=post.title,
-                createdAt=post.created_at,
-                content=post.content,
-                uuid=post.link.uuid,
-                namespace=post.link.namespace,
-                writer=post.link.writer,
-                id=post.id)
-            )
-        for post in post_of_request_seminar.PostOfRequestSeminar.objects.filter(title__contains=keyword):
-            result.append(AbstractPost(
-                title=post.title,
-                createdAt=post.created_at,
-                content=post.content,
-                uuid=post.link.uuid,
-                namespace=post.link.namespace,
-                id=post.id,
-                writer=post.link.writer,
-                tag_kind=post.tag_kind
-            ))
-        for post in post_of_recruit_seminar.PostOfRecruitSeminar.objects.filter(title__contains=keyword):
-            result.append(AbstractPost(
-                title=post.title,
-                createdAt=post.created_at,
-                content=post.content,
-                uuid=post.link.uuid,
-                namespace=post.link.namespace,
-                id=post.id,
-                writer=post.link.writer,
-                tag_kind=post.tag_kind
-            ))
+        sentence = ''
+        tags = ''
+        mention = ''
+        for word in keyword.split():
+            if word.startswith('$'):
+                tags += word[1:]
+            elif word.startswith('@'):
+                mention += word[1:]
+            else:
+                if len(sentence) > 0:
+                    sentence += ' '
+                sentence += word
+
+        print("sentence : " + sentence)
+        print("tags : " + tags)
+        print("mention : " + mention)
+
+        for post in post_of_free_seminar.PostOfFreeSeminar.objects.filter(title__contains=sentence):
+            if tags is "":
+                if mention in str(post.link.writer):
+                    result.append(AbstractPost(
+                        title=post.title,
+                        createdAt=post.created_at,
+                        content=post.content,
+                        uuid=post.link.uuid,
+                        namespace=post.link.namespace,
+                        writer=post.link.writer,
+                        id=post.id
+                    ))
+
+        for post in post_of_request_seminar.PostOfRequestSeminar.objects.filter(title__contains=sentence):
+            if tags in post.tag_kind:
+                if mention in str(post.link.writer):
+                    result.append(AbstractPost(
+                        title=post.title,
+                        createdAt=post.created_at,
+                        content=post.content,
+                        uuid=post.link.uuid,
+                        namespace=post.link.namespace,
+                        id=post.id,
+                        writer=post.link.writer,
+                        tag_kind=post.tag_kind
+                    ))
+
+        for post in post_of_recruit_seminar.PostOfRecruitSeminar.objects.filter(title__contains=sentence):
+            if tags in post.tag_kind:
+                if mention in str(post.link.writer):
+                    result.append(AbstractPost(
+                        title=post.title,
+                        createdAt=post.created_at,
+                        content=post.content,
+                        uuid=post.link.uuid,
+                        namespace=post.link.namespace,
+                        id=post.id,
+                        writer=post.link.writer,
+                        tag_kind=post.tag_kind
+                    ))
+
         return result
 
     def resolve_postsOfFreeSeminar(self, info):

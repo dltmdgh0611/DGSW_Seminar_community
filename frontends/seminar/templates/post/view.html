@@ -100,6 +100,8 @@ function resize(obj) {
         {% endfor %}
         {% endif %}
     </h1>
+
+
     <div class="text-right mb-2 d-flex align-items-center">
         <div class="mr-auto">
             {{ post.created_at }}
@@ -117,6 +119,8 @@ function resize(obj) {
 
         {% endif %}
     </div>
+
+
     <div class="media-body pb-5 pt-5 lh-125 border-top border-gray">
         {{ post.content | linebreaksbr }}
     </div>

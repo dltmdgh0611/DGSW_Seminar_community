@@ -18,6 +18,7 @@ class Navigator extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.props.history.push('/search?s='+ this.search_query);
+
     }
 
     render() {
