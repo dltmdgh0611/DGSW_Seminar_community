@@ -8,7 +8,7 @@ import moment from 'moment';
 import 'moment/locale/ko'
 moment.locale('ko')
 
-const get_posts_of_free_seminar = 'query{ search(keyword:""){ title, content, createdAt, namespace, id, uuid, writer} }';
+const get_posts_of_free_seminar = 'query{ postsOfFreeSeminar{ id, title, createdAt, link{ uuid } } }';
 
 
 class PageOfFreeSeminar extends Component {  
@@ -35,22 +35,20 @@ class PageOfFreeSeminar extends Component {
                 "Access-Control-Allow-Origin": "*",
             }
         }).then(result => {
-            
-            this.search = 
-            this.setState({ postsOfFreeSeminar:result.data.data.search });
+            this.postsOfFreeSeminar = 
+            this.setState({ postsOfFreeSeminar:result.data.data.postsOfFreeSeminar });
         });
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.sss)
         this.props.history.push('/postview?v='+ this.sss);
     }
 
     render() {
         
         return (
-            <div>
+            <>
                 <Navigator {...this.props}/>
                 <Jumbotron fluid>
                     <Container>
@@ -59,8 +57,8 @@ class PageOfFreeSeminar extends Component {
                     </Container>
                 </Jumbotron>
                 <Container className="p-3">
-                {this.state.postsOfFreeSeminar.filter(postsOfFreeSeminar => postsOfFreeSeminar.namespace.includes('Free')).map(post => (
-                    <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id} onClick={this.handleSubmit.bind(this)} onMouseOver={(e) => {this.sss = post.uuid}}>
+                {this.state.postsOfFreeSeminar.map(post => (
+                    <Card key={post.id} className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} onClick={this.handleSubmit.bind(this)} onMouseOver={(e) => {this.sss = post.link.uuid}}>
                         <Card.Title as="h4">
                         {post.title}
                         </Card.Title>
@@ -70,7 +68,7 @@ class PageOfFreeSeminar extends Component {
                     </Card>
                 ))}
                 </Container>
-            </div>
+            </>
         );
     }
 }

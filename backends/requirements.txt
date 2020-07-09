@@ -1,6 +1,6 @@
 asgiref==3.2.10
-Django==3.0.7
-mysqlclient @ file:///C:/Users/user/prac/mysite/mysqlclient-1.4.6-cp38-cp38-win32.whl
+Django==3.0.8
+mysqlclient @ https://download.lfd.uci.edu/pythonlibs/w3jqiv8s/mysqlclient-1.4.6-cp38-cp38-win32.whl
 pytz==2020.1
 sqlparse==0.3.1
 psycopg2==2.8.5
@@ -13,5 +13,5 @@ promise==2.3
 pytz==2020.1
 Rx==1.6.1
 singledispatch==3.4.0.3
-six==1.15.0=
+six==1.15.0
 Unidecode==1.1.1

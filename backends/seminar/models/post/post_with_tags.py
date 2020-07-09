@@ -10,7 +10,7 @@ class PostWithTags(Post):
     def get_tags(self):
         if self.tag_kind is None:
             return []
-        return str(self.tag_kind).split(',')
+        return [{'id': k, 'name': tag}for k, tag in enumerate(str(self.tag_kind).split(','))]
 
     class Meta:
         abstract = True

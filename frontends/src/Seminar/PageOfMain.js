@@ -4,10 +4,6 @@ import Container from 'react-bootstrap/Container'
 import Navigator from './Navigator'
 
 class PageOfMain extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
         <div>

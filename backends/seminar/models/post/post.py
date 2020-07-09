@@ -11,7 +11,7 @@ class Post(models.Model):
     edited_at = models.DateTimeField(auto_now=True)
     vote_count = models.PositiveIntegerField(default=0)
 
-    __slots__ = 'recommends'
+    __slots__ = ['recommends', 'objects']
 
     category = None
 

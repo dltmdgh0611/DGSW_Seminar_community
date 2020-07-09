@@ -29,34 +29,44 @@ class PageOfSearchResults extends Component {
       };
     }
 
-    componentDidUpdate(prv_prop, pr_state, snapshot) {
+    updateSerachResult() {        
         const keyword = new URLSearchParams(this.props.location.search).get('s')
-        if (this.props.location.search != prv_prop.location.search)
+        if (keyword.length > 0)
         {
-            prv_prop = this.props
-            console.log(keyword);
             axios({
                 method: "POST",
                 url: "http://localhost:8000/api",
                 data: {
                     
-                    query: `query{ search(keyword:"${keyword}"){ uuid, id, title, createdAt, tagKind, namespace, writer }}`
+                    query: `query{ search(keyword:"${keyword}"){ uuid, id, title, createdAt, tagKind, namespace }}`
                 },
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                 }
             }).then(result => {this.search_result = 
                 this.setState({ search_result:result.data.data.search });
-                console.log(this.state.search_result)
             });
         }
     }
+
+    componentDidUpdate(prv_prop, pr_state, snapshot) {
+        if (this.props.location.search !== prv_prop.location.search)
+            this.updateSerachResult();
+        
+        prv_prop = this.props
+    }
+
+    componentDidMount() {
+        this.updateSerachResult();
+    }
+
     render() {
         
         return (
-            <div>
+            <>
                 <Navigator {...this.props}/>
                 <Container className="p-3">
+
                 {this.state.search_result.map(post => (
                     <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id}>
                         <Card.Title as="h4" style={{ cursor: "poitner" }}>
@@ -70,7 +80,7 @@ class PageOfSearchResults extends Component {
                     </Card>
                 ))}
                 </Container>
-            </div>
+            </>
         );
     }
 }

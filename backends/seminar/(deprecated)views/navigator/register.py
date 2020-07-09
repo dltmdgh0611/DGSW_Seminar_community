@@ -2,7 +2,7 @@ import uuid
 
 from django.shortcuts import render, redirect
 
-from seminar.models.userdata import UserData, User
+from seminar.models.member import UserData, User
 
 
 def register(req):

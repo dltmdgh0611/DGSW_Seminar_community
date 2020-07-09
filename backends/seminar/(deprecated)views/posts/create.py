@@ -53,8 +53,6 @@ def create(req):
         link.namespace = post.__class__.__name__
         post.link = link
 
-
-
         link.save()
         post.save()
         return redirect('main')

@@ -4,20 +4,26 @@ import Nav from 'react-bootstrap/Nav'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
-import ReactDOM from 'react-dom';
+import MemberControl from './MemberControl'
+
+
 
 class Navigator extends Component {
     
     constructor(props) {
       super(props);
       this.search_query = "";
+      this.state = {    
+      }
     }
-    componentDidMount() {
-    }
+
     
     handleSubmit(event) {
         event.preventDefault();
-        this.props.history.push('/search?s='+ this.search_query);
+        if(this.search_query.includes("#")){
+            this.search_query = this.search_query.replace("#", "$");
+        }
+        this.props.history.push('/search?s= '+ this.search_query);
 
     }
 
@@ -51,6 +57,9 @@ class Navigator extends Component {
                     <Nav.Item className="mx-2">
                         <Nav.Link href="" disabled>강의 수요현황 </Nav.Link>
                     </Nav.Item>
+                </Nav>
+                <Nav className="ml-auto d-flex px-5">
+                    <MemberControl {...this.props} me={this.state.me}/>                   
                 </Nav>
             </Navbar>
         );
