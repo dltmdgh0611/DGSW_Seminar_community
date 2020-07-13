@@ -9,14 +9,7 @@ import MemberControl from './MemberControl'
 
 
 class Navigator extends Component {
-    
-    constructor(props) {
-      super(props);
-      this.search_query = "";
-      this.state = {    
-      }
-    }
-
+    search_query = "";
     
     handleSubmit(event) {
         event.preventDefault();
@@ -43,9 +36,6 @@ class Navigator extends Component {
                 </Form>
                 <Nav fill varaint="tabs">
                     <Nav.Item className="mx-2">
-                        <Nav.Link href="">작성하기</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item className="mx-2">
                         <Nav.Link href="/recruit_seminar">강의 목록</Nav.Link>
                     </Nav.Item>
                     <Nav.Item className="mx-2">
@@ -59,7 +49,7 @@ class Navigator extends Component {
                     </Nav.Item>
                 </Nav>
                 <Nav className="ml-auto d-flex px-5">
-                    <MemberControl {...this.props} me={this.state.me}/>                   
+                    <MemberControl {...this.props}/>                   
                 </Nav>
             </Navbar>
         );

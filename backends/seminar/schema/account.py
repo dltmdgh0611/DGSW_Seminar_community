@@ -30,11 +30,7 @@ class Create_Account(graphene.Mutation):
         return Create_Account(ok=True)
 
 
-class Login_Account(graphene.Mutation):
-    def mutate(self, info):
-        pass
 
 
 class Account_Mutations(graphene.ObjectType):
     create_account = Create_Account.Field()
-    # login_account = Login_Account.Field()

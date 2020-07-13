@@ -137,3 +137,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+# EMAIL_HOST = "smtp.naver.com"
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = 'forseminar1324'
+# EMAIL_HOST_PASSWORD = 'tiuygjhbnm,!'
+# SEND_ACTIVATION_EMAIL = 'forseminar1324@naver.com'
+# EMAIL_USE_SSL = True
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+GRAPHQL_AUTH = {
+    'SEND_ACTIVATION_EMAIL': False
+}

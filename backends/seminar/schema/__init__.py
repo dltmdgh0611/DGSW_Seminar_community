@@ -11,7 +11,7 @@ class MasterQuery(UserQuery, MeQuery, PostQuery, SearchOfCategoryQuery, graphene
     pass
 
 
-class MasterMutation(PostMutations, Account_Mutations, AuthMutation, graphene.ObjectType):
+class MasterMutation(PostMutations, AuthMutation, graphene.ObjectType):
     pass
 
 

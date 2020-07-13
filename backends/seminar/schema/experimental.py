@@ -85,6 +85,7 @@ class UpdatePost(graphene.Mutation):
 
 class DeletePost(graphene.Mutation):
     class Arguments:
+
         uuid = graphene.UUID()
 
     ok = graphene.Boolean()
