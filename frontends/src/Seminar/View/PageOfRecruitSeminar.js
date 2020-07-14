@@ -113,7 +113,7 @@ class PageOfRecruitSeminar extends Component {
               </Modal.Header>
               <Modal.Body>
                   <Form className="p-4">
-                    <select class="form-control mb-4 w-25" name="tag_kind" onChange={this.handleChangetag}>
+                    <select className="form-control mb-4 w-25" name="tag_kind" onChange={this.handleChangetag}>
                         <option>Web</option>
                         <option>Android</option>
                         <option>Window</option>

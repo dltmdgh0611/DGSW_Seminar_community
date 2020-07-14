@@ -5,9 +5,10 @@ import moment from 'moment';
 import {Modal,Button,Form,Jumbotron,Container,Badge,Card} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import 'moment/locale/ko'
+import cookie from 'react-cookies';
 moment.locale('ko')
 
-const get_posts_of_free_seminar = 'query{ postsOfFreeSeminar{ id, title, createdAt, link{ uuid } } }';
+const get_posts_of_free_seminar = 'query{ postsOfFreeSeminar{ id, title, createdAt, link{ uuid } }, me { id } }';
 
 
 class PageOfFreeSeminar extends Component {  
@@ -40,7 +41,7 @@ class PageOfFreeSeminar extends Component {
                 "Access-Control-Allow-Origin": "*",
             }
         }).then(result => {
-            this.postsOfFreeSeminar = 
+            console.log(result.data.data);
             this.setState({ postsOfFreeSeminar:result.data.data.postsOfFreeSeminar });
         });
     }
@@ -121,6 +122,7 @@ class PageOfFreeSeminar extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
             }
         })
 

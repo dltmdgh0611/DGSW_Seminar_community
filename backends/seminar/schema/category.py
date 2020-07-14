@@ -1,7 +1,13 @@
 import graphene
 from graphene_django import DjangoObjectType
 
+from backend_setting.models import Member
 from seminar.models import PostOfRequestSeminar, PostOfRecruitSeminar, PostOfFreeSeminar, Link
+
+
+class MemberSchema(DjangoObjectType):
+    class Meta:
+        model = Member
 
 
 class LinkSchema(DjangoObjectType):
@@ -40,6 +46,8 @@ class PostQuery(graphene.ObjectType):
     posts_of_free_seminar = graphene.List(PostOfFreeSeminarSchema)
     posts_of_request_seminar = graphene.List(PostOfRequestSeminarSchema)
     posts_of_recruit_seminar = graphene.List(PostOfRecruitSeminarSchema)
+    links = graphene.List(LinkSchema)
+    members = graphene.List(MemberSchema)
 
     def resolve_posts_of_free_seminar(self, info):
         return PostOfFreeSeminar.objects.all()
@@ -49,3 +57,9 @@ class PostQuery(graphene.ObjectType):
 
     def resolve_posts_of_recruit_seminar(self, info):
         return PostOfRecruitSeminar.objects.all()
+
+    def resolve_links(self, info):
+        return Link.objects.all()
+
+    def resolve_members(self, info):
+        return Member.objects.all()

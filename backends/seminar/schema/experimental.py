@@ -3,10 +3,10 @@ from uuid import uuid4
 
 import graphene
 from graphql import ResolveInfo
-from graphql_auth import mutations
+from graphql_jwt.decorators import login_required
 
 from seminar.models import PostOfFreeSeminar, PostOfRequestSeminar, PostOfRecruitSeminar, Link
-from seminar.models.member import Member
+from backend_setting.models import Member
 
 
 class CreatePost(graphene.Mutation):
@@ -18,11 +18,11 @@ class CreatePost(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @staticmethod
+    @login_required
     def mutate(self, info: ResolveInfo, title, content, tagKind, KindOf):
         link = Link()
         link.uuid = uuid4()
-        link.writer = Member.objects.get(uuid="ae06c00923534109889b3f42f859d120")
+        link.writer = info.context.user
         post = None
         if KindOf == "PostOfFreeSeminar":
             post = PostOfFreeSeminar(
@@ -109,8 +109,3 @@ class PostMutations(graphene.ObjectType):
     create_post = CreatePost.Field()
     update_post = UpdatePost.Field()
 
-
-class AuthMutation(graphene.ObjectType):
-    register = mutations.Register.Field()
-    verify_account = mutations.VerifyAccount.Field()
-    token_auth = mutations.ObtainJSONWebToken.Field()

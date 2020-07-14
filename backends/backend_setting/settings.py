@@ -19,7 +19,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphql_auth',
-    'seminar.apps.Config',
+    'backend_setting.apps.BackendConfig',
+    'seminar.apps.SeminarConfig',
 ]
 
 MIDDLEWARE = [
@@ -55,12 +56,12 @@ WSGI_APPLICATION = 'backend_setting.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test',
-        'USER': 'root',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'seminar',
+        'USER': 'django',
         'PASSWORD': '12345678',
         'HOST': '127.0.0.1',
-        'PORT': ''
+        'PORT': '5432'
     }
 }
 
@@ -95,6 +96,7 @@ AUTHENTICATION_BACKENDS = [
 GRAPHQL_JWT = {
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LONG_RUNNING_REFRESH_TOKEN': True,
+    'JWT_ALLOW_ARGUMENT': True,
     "JWT_ALLOW_ANY_CLASSES": [
         "graphql_auth.mutations.Register",
         "graphql_auth.mutations.VerifyAccount",
@@ -105,7 +107,7 @@ GRAPHQL_JWT = {
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
+    "http://localhost",
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -119,6 +121,7 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'authorization'
 ]
 
 LOGIN_URL = 'login'
@@ -145,6 +148,13 @@ STATICFILES_DIRS = [
 # EMAIL_USE_SSL = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+AUTH_USER_MODEL = 'backend_setting.Member'
+
 GRAPHQL_AUTH = {
-    'SEND_ACTIVATION_EMAIL': False
+    'SEND_ACTIVATION_EMAIL': False,
+    'REGISTER_MUTATION_FIELDS': [
+        "email",
+        "username",
+        "uuid"
+    ]
 }

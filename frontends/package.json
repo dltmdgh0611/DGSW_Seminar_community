@@ -18,10 +18,11 @@
     "react-scripts": "3.4.1",
     "react-textarea-autosize": "^8.2.0",
     "react-use-form-state": "^0.13.1",
-    "universal-cookie": "^4.0.3"
+    "universal-cookie": "^4.0.3",
+    "uuid": "^8.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=80 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -1,14 +1,13 @@
 from django.db import models
 
-from ..member import Member
+from backend_setting.models import Member
 
 
 class Link(models.Model):
     uuid = models.UUIDField(primary_key=True)
-    writer = models.ForeignKey(Member, models.PROTECT, 'wrote_post')
+    writer = models.ForeignKey(Member, models.PROTECT, 'wrote_post', blank=False)
 
     namespace = models.CharField(blank=False, max_length=60)
-    Schema = None
     objects = None
 
     def __str__(self):
@@ -17,13 +16,3 @@ class Link(models.Model):
     @property
     def get_uuid(self):
         return str(self.uuid)
-
-
-'''
-class LinkSchema(DjangoObjectType):
-    class Meta:
-        model = Link
-
-
-Link.Schema = LinkSchema
-'''

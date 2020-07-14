@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form'
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal'
 import cookie from 'react-cookies';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
   
@@ -28,7 +28,7 @@ class MemberControl extends Component {
             pw_error: '',
             pwc_error: '',
             email_error:''
-        }
+    };
     }
 
     ShowLoginModal = () => { this.setState({show_login_modal: true}); }
@@ -41,8 +41,8 @@ class MemberControl extends Component {
     HideSignupModal = () => { this.setState({show_signup_modal: false}); }
 
 
-    handleChangeid = (event) =>{this.setState({login_id_value: event.target.value})}
-    handleChangepw = (event) => {this.setState({login_pw_value: event.target.value})}
+    handleChangeid = (event) =>{this.setState({login_id_value: event.target.value})};
+    handleChangepw = (event) => {this.setState({login_pw_value: event.target.value})};
     changesignupform = (event) => {
         const target = event.target
         const names = target.name
@@ -50,12 +50,12 @@ class MemberControl extends Component {
         console.log(names, target.value)
         this.setState({
             [names]: target.value
-        })
+        });
         console.log(this.state)
-    }
+    };
 
     componentWillMount(){
-        this.state = { me : cookie.load('me')}
+        this.setState( { me : cookie.load('me')})
     }
 
 
@@ -63,6 +63,7 @@ class MemberControl extends Component {
         return (
           <Modal
             show={this.state.show_login_modal}
+            onHide={()=>{}}
             size="md"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -77,8 +78,8 @@ class MemberControl extends Component {
                     <h3 className="mb-3 font-weight-normal form-signin">Please Log in</h3>
                     <label className="sr-only">Email address</label>
                     <input type="text" className="form-control mb-3" placeholder="Email address" onChange={this.handleChangeid}></input>
-                    <label for="inputPassword" className="sr-only">Password</label>
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" onChange={this.handleChangepw}></input>
+                    <label htmlFor="inputPassword" className="sr-only">Password</label>
+                    <input type="password" id="inputPassword" className="form-control" placeholder="Password" onChange={this.handleChangepw}></input>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -112,7 +113,7 @@ class MemberControl extends Component {
                         </div>
                         <div className="form-label-group">
                             <label for="inputEmail" className="mb-0">아이디</label>
-                            <input name="signup_id" type="text" id="inputEmail" className="form-control mb-2" placeholder="ID" required="" autofocus=""></input>
+                            <input name="signup_id" type="text" id="inputId" className="form-control mb-2" placeholder="ID" required="" autofocus=""></input>
                             <p for="inputPassword" className="text-danger" style={{"white-space":"pre-line"}}>{this.state.id_error}</p>
                         </div>
                         <div className="form-label-group">
@@ -122,7 +123,7 @@ class MemberControl extends Component {
                         </div>
                         <div className="form-label-group">
                             <label for="inputPassword" className="mb-0">패스워드 확인</label>
-                            <input name="signup_cpw" type="password" id="inputPassword" className="form-control mb-2" placeholder="Password" required=""></input>
+                            <input name="signup_cpw" type="password" id="inputPasswordConfirm" className="form-control mb-2" placeholder="Password" required=""></input>
                             <p for="inputPassword" className="text-danger" style={{"white-space":"pre-line"}}>{this.state.pwc_error}</p>
                         </div>
                         {/* <div className="checkbox mb-3">
@@ -153,10 +154,13 @@ class MemberControl extends Component {
         if (result.status === 200) 
             if (result.data.data.tokenAuth.success === true) 
             {    
+                console.log(result)
                 const user = result.data.data.tokenAuth.user;
                 
                 this.setState({'me': user})
                 cookie.save('me', user,{path:'/'})
+                cookie.save('token', "JWT " + result.data.data.tokenAuth.token ,{path:'/'})
+                cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'})
                 this.HideLoginModal()
                 return {'me': user}
             }
@@ -178,6 +182,7 @@ class MemberControl extends Component {
                       username: "${id_value}",
                       password1: "${pw_value}",
                       password2: "${pw_confirm}",
+                      uuid: "${uuidv4()}",
                     ) {
                       success,
                       errors,

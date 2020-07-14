@@ -59,21 +59,21 @@ class PostView extends Component {
                     {this.state.allseminar.filter(allseminar => allseminar.uuid.includes(this.postuuid)).map(post => (
                         <React.Fragment>
                             <React.Fragment>
-                            <h1 class=" pb-2 mb-0">
+                            <h1 className=" pb-2 mb-0">
                                 {post.title}
                                 {render_tags(post)}
                             </h1>
-                            <div class="text-right mb-2 d-flex align-items-center">
-                                <div class="mr-auto">
+                            <div className="text-right mb-2 d-flex align-items-center">
+                                <div className="mr-auto">
                                     {moment(Date.parse(post.createdAt)).fromNow()}
                                     <strong>- {post.writer}</strong>
                                     님 작성
                                 </div>
-                                <span onclick="" style={{cursor: "poitner"}} class="mr-3">삭제하기</span>
+                                <span onclick="" style={{cursor: "poitner"}} className="mr-3">삭제하기</span>
                             </div>
                             </React.Fragment>
                             <React.Fragment>
-                                <div class="media-body pb-5 pt-5 lh-125 border-top border-gray">
+                                <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
                                     {post.content}
                                 </div>
                             </React.Fragment>
