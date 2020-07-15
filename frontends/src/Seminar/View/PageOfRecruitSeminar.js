@@ -5,23 +5,10 @@ import moment from 'moment';
 import {Modal,Button,Form,Jumbotron,Container,Badge,Card} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import 'moment/locale/ko'
+import cookie from 'react-cookies';
 moment.locale('ko')
 
-const get_posts_of_recruit_seminar = `{
-    postsOfRecruitSeminar {
-        id
-      title
-      createdAt
-      getTags {
-        id
-        name
-      }
-      link {
-        uuid
-      }
-    }
-  }
-  `;
+const get_posts_of_recruit_seminar = `query{ postsOfRecruitSeminar{ id, title, createdAt, getTags { name } link{ uuid, writer { username } } } }`;
 
 class PageOfRecruitSeminar extends Component {  
     constructor(props) {
@@ -185,6 +172,7 @@ class PageOfRecruitSeminar extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
             }
         })
 
@@ -222,7 +210,7 @@ class PageOfRecruitSeminar extends Component {
                         ))}
                         </Card.Title>
                         <Card.Text as="h5">
-                            {moment(Date.parse(post.createdAt)).fromNow()}
+                            {moment(Date.parse(post.createdAt)).fromNow()}-{post.link.writer.username}
                         </Card.Text>
                     </Card>
                 ))}

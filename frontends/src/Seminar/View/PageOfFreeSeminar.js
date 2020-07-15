@@ -8,7 +8,7 @@ import 'moment/locale/ko'
 import cookie from 'react-cookies';
 moment.locale('ko')
 
-const get_posts_of_free_seminar = 'query{ postsOfFreeSeminar{ id, title, createdAt, link{ uuid } }, me { id } }';
+const get_posts_of_free_seminar = 'query{ postsOfFreeSeminar{ id, title, createdAt, link{ uuid, writer { username } } } }';
 
 
 class PageOfFreeSeminar extends Component {  
@@ -128,6 +128,7 @@ class PageOfFreeSeminar extends Component {
 
         if(result.status == 200){
             this.HidePostModal()
+            
         }
         else alert("lf")
     }
@@ -156,7 +157,7 @@ class PageOfFreeSeminar extends Component {
                         {post.title}
                         </Card.Title>
                         <Card.Text as="h5">
-                            {moment(Date.parse(post.createdAt)).fromNow()}-{post.writer}
+                            {moment(Date.parse(post.createdAt)).fromNow()}-{post.link.writer.username}
                         </Card.Text>
                     </Card>
                 ))}

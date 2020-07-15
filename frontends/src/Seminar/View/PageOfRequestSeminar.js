@@ -5,23 +5,10 @@ import moment from 'moment';
 import {Modal,Button,Form,Jumbotron,Container,Badge,Card} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import 'moment/locale/ko'
+import cookie from 'react-cookies';
 moment.locale('ko')
 
-const get_posts_of_request_seminar = `{
-        postsOfRequestSeminar {
-            id
-            title
-            createdAt
-            getTags {
-                id
-                name
-            }
-            link {
-                uuid
-            }
-        }
-    }
-  `;
+const get_posts_of_request_seminar = `query{ postsOfRequestSeminar{ id, title, createdAt, getTags { name } link{ uuid, writer { username } } } }`;
 
 class PageOfRequestSeminar extends Component {  
     constructor(props) {
@@ -31,7 +18,7 @@ class PageOfRequestSeminar extends Component {
         show_post_modal: null,
         post_title: '',
         post_content: '',
-        post_tag: ''
+        post_tag: 'Web'
       }
     }
 
@@ -140,6 +127,7 @@ class PageOfRequestSeminar extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
             }
         })
 
@@ -172,12 +160,11 @@ class PageOfRequestSeminar extends Component {
                             {post.title}
                             {post.getTags
                             .map(tag => (
-                                <Badge key={tag.id} variant={(tag.name.indexOf('학년') > -1 ? "secondary" : "success") + " mx-1"} >{tag.name}</Badge>
+                            <Badge key={tag.id} variant={(tag.name.indexOf('학년') > -1 ? "secondary" : "success") + " mx-1"} >{tag.name}</Badge>
                             ))}
-                        <Badge variant="success mx-1">{post.tagKind}</Badge>
                         </Card.Title>
                         <Card.Text as="h5">
-                            {moment(Date.parse(post.createdAt)).fromNow()}
+                            {moment(Date.parse(post.createdAt)).fromNow()}-{post.link.writer.username}
                         </Card.Text>
                     </Card>
                 ))}

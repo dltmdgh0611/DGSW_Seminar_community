@@ -46,7 +46,7 @@ class PostQuery(graphene.ObjectType):
     posts_of_free_seminar = graphene.List(PostOfFreeSeminarSchema)
     posts_of_request_seminar = graphene.List(PostOfRequestSeminarSchema)
     posts_of_recruit_seminar = graphene.List(PostOfRecruitSeminarSchema)
-    links = graphene.List(LinkSchema)
+    links = graphene.List(LinkSchema, uuid=graphene.UUID())
     members = graphene.List(MemberSchema)
 
     def resolve_posts_of_free_seminar(self, info):
@@ -58,8 +58,9 @@ class PostQuery(graphene.ObjectType):
     def resolve_posts_of_recruit_seminar(self, info):
         return PostOfRecruitSeminar.objects.all()
 
-    def resolve_links(self, info):
-        return Link.objects.all()
+    def resolve_links(self, info, **kwargs):
+        uuid = kwargs['uuid']
+        return Link.objects.filter(uuid=uuid)
 
     def resolve_members(self, info):
         return Member.objects.all()
