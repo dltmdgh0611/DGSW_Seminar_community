@@ -100,7 +100,7 @@ class PageOfFreeSeminar extends Component {
                 <Button onClick={ () => this.setState(this.doFreePost(this.state.post_title, this.state.post_content))}>작성하기</Button>
               </Modal.Footer>
             </Modal>
-          );
+        );
     }
 
     async doFreePost(title, content){
