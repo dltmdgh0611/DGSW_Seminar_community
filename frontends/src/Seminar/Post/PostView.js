@@ -26,23 +26,27 @@ class PostView extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            me: undefined,
             targetseminar:[],
-            postnamespace:''
+            postnamespace:'',
+            postuuid:''
         }
         
     }
    
     
-
+    componentWillMount(){
+        this.setState( { me : cookie.load('me')})
+    }
     componentDidMount() {        
-        this.postuuid = new URLSearchParams(this.props.location.search).get('v')
+        this.state.postuuid = new URLSearchParams(this.props.location.search).get('v')
         axios({
             method: "POST",
             url: "http://localhost:8000/api",
             data: {
                 query: 
                 `query{
-                    links(uuid:"${this.postuuid}"){
+                    links(uuid:"${this.state.postuuid}"){
                       writer {
                         username
                       }
@@ -99,7 +103,12 @@ class PostView extends Component {
         })
 
         if(result.status == 200){
-            this.HidePostModal()
+            console.log(result.data.data.deletePost.ok)
+            if(result.data.data.deletePost.ok == true){
+                window.history.back()
+                console.log("ok")
+            }
+            else alert("delete error")
         }
         else alert("lf")
     }
@@ -177,6 +186,15 @@ class PostView extends Component {
         }
     }
 
+    setpermission = (post) => {
+        if(post.writer.username == this.state.me.username){
+            return(
+                <span onClick={ () => this.setState(this.doDeletePost(this.state.postuuid))} style={{cursor: "pointer"}} className="mr-3">삭제하기</span>
+            );
+        }
+    }
+    
+
     render() {
         
         return (
@@ -198,7 +216,7 @@ class PostView extends Component {
                                     <strong>- {post.writer.username}</strong>
                                     님 작성
                                 </div>
-                                <span onclick="" style={{cursor: "poitner"}} className="mr-3">삭제하기</span>
+                                {this.setpermission(post)}
                             </div>
                             </React.Fragment>
                             <React.Fragment>

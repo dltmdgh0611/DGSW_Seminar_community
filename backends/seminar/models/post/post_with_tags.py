@@ -14,3 +14,4 @@ class PostWithTags(Post):
 
     class Meta:
         abstract = True
+        ordering = ['-created_at']

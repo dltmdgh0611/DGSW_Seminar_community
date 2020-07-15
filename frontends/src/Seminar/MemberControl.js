@@ -158,9 +158,9 @@ class MemberControl extends Component {
                 const user = result.data.data.tokenAuth.user;
                 
                 this.setState({'me': user})
-                cookie.save('me', user,{path:'/'})
-                cookie.save('token', "JWT " + result.data.data.tokenAuth.token ,{path:'/'})
-                cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'})
+                cookie.save('me', user,{path:'/'}, {maxAge : 3600*24*30})
+                cookie.save('token', "JWT " + result.data.data.tokenAuth.token ,{path:'/'}, {maxAge : 3600*24*30})
+                cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'}, {maxAge : 3600*24*30})
                 this.HideLoginModal()
                 return {'me': user}
             }
@@ -201,6 +201,7 @@ class MemberControl extends Component {
             console.log(result.data.data.register.errors)
             if(result.data.data.register.success){
                 this.HideSignupModal()
+                alert("회원가입이 완료되었습니다")
             }
             else {
                 var error = result.data.data.register.errors

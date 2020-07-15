@@ -127,8 +127,10 @@ class PageOfFreeSeminar extends Component {
         })
 
         if(result.status == 200){
-            this.HidePostModal()
-            
+            if(result.data.data.createPost.ok == true){
+                this.HidePostModal()
+                window.location.reload()
+            }
         }
         else alert("lf")
     }
