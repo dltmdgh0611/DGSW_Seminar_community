@@ -161,7 +161,7 @@ class PageOfRecruitSeminar extends Component {
                 query: `mutation {
                     createPost(
                       title:"${title}",
-                      content:"${content}",
+                      content:"${content.split("\n")}",
                       tagKind:"${tag}",
                       KindOf:"PostOfRecruitSeminar"
                     )

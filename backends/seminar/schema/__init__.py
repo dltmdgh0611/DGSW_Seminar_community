@@ -2,13 +2,14 @@ import graphene
 from graphql_auth.schema import UserQuery, MeQuery
 
 from .category import PostQuery
+from .comment import CommentQuery
 from .experimental import PostMutations
 from .CommentMutation import CommentMutations
 from .account import AccountMutations
 from .search_of_category import SearchOfCategoryQuery
 
 
-class MasterQuery(UserQuery, MeQuery, PostQuery, SearchOfCategoryQuery, graphene.ObjectType):
+class MasterQuery(UserQuery, MeQuery, PostQuery, SearchOfCategoryQuery, CommentQuery, graphene.ObjectType):
     pass
 
 

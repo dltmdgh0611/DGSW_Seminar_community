@@ -104,6 +104,7 @@ class PageOfFreeSeminar extends Component {
     }
 
     async doFreePost(title, content){
+        console.log(content.split("\n"))
         const result = await axios({
             method: "POST",
             url: "http://localhost:8000/api",
@@ -111,7 +112,7 @@ class PageOfFreeSeminar extends Component {
                 query: `mutation {
                     createPost(
                       title:"${title}",
-                      content:"${content}",
+                      content:"${content.split("\n")}",
                       tagKind:"",
                       KindOf:"PostOfFreeSeminar"
                     )

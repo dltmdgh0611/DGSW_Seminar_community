@@ -37,9 +37,9 @@ class DeleteComment(graphene.Mutation):
     ok = graphene.Boolean()
 
     def mutate(self, info, uuid):
-        Comment.objects.get(ref_link=uuid).delete()
+        Comment.objects.get(uuid=uuid).delete()
 
-        ok = len(Comment.objects.filter(ref_link=uuid)) == 0
+        ok = len(Comment.objects.filter(uuid=uuid)) == 0
         return DeleteComment(ok=ok)
 
 

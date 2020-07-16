@@ -23,12 +23,26 @@ const render_tags = (post) => {
     return ;
 }
 
+const cms = {
+    height : "24px",
+    fontSize: "16px",
+    color: "#202020",
+    resize: "none",
+    outline: "0 none",
+    lineHeight: "24px",
+    overflow: "hidden",
+    letterSpacing: "-.4px",
+    minHeight: "50px" 
+}
+
 class PostView extends Component {  
     constructor(props) {
         super(props);
         this.state = {
             me: undefined,
             targetseminar:[],
+            comments:[],
+            comment_content:'',
             postnamespace:'',
             postuuid:'',
             currentTitle:'',
@@ -50,6 +64,13 @@ class PostView extends Component {
     handleChangetag_grade1 = (event) => {this.setState({gradeone : !this.state.gradeone}); console.log(this.state.gradeone) }
     handleChangetag_grade2 = (event) => {this.setState({gradetwo : !this.state.gradetwo}); console.log(this.state.gradetwo)}
     handleChangetag_grade3 = (event) => {this.setState({gradethree : !this.state.gradethree}); console.log(this.state.gradethree)}
+
+    handleChangeComment = (event) => {
+        this.setState({comment_content: event.target.value})
+        console.log(this.state.comment_content)
+    }
+
+
     postbtn = (event) => {
         this.setState(this.doEditPost(this.state.postuuid,this.state.edit_title, this.state.edit_content, this.state.edit_tag, this.state.gradeone, this.state.gradetwo, this.state.gradethree))
     }
@@ -98,6 +119,28 @@ class PostView extends Component {
         }).then(result => {
             this.state.targetseminar = this.setState({ targetseminar:result.data.data.links });
             console.log(this.state.targetseminar)
+        });
+
+        axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `query{
+                    comment(refLinkUuid:"${this.state.postuuid}"){
+                      commentDate,
+                      commentWriter{
+                        username
+                      }
+                      commentContent
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            }
+        }).then(result => {
+            this.setState({ comments:result.data.data.comment });
+            console.log(this.state.comments)
         });
         
         
@@ -220,7 +263,12 @@ class PostView extends Component {
             this.state.currentContent = post.postoffreeseminar.content
             return (
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
-                    {post.postoffreeseminar.content}
+                    {post.postoffreeseminar.content.split(",").map(content =>(
+                        <>
+                        <a>{content}</a>
+                        <br></br>
+                        </>
+                    ))}
                 </div>
             );
         }
@@ -229,7 +277,12 @@ class PostView extends Component {
             this.state.currentContent = post.postofrequestseminar.content
             return (
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
-                    {post.postofrequestseminar.content}
+                    {post.postofrequestseminar.content.split(",").map(content =>(
+                        <>
+                        <a>{content}</a>
+                        <br></br>
+                        </>
+                    ))}
                 </div>
             );
         }
@@ -238,7 +291,12 @@ class PostView extends Component {
             this.state.currentContent = post.postofrecruitseminar.content
             return (
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
-                    {post.postofrecruitseminar.content}
+                    {post.postofrecruitseminar.content.split(",").map(content =>(
+                        <>
+                        <a>{content}</a>
+                        <br></br>
+                        </>
+                    ))}
                 </div>
             );
         }
@@ -362,6 +420,38 @@ class PostView extends Component {
           );
     }
 
+    async doCommentCreate(content, user, postlink){
+        const result = await axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `mutation{
+                    createComment(
+                      content:"${content}",
+                      linkId:"${postlink}",
+                      userId:"3440eb36-70c3-480a-93fb-1116932afdd6"
+                    ){
+                      ok
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
+            }
+        })
+
+        if(result.status == 200){
+            console.log(result)
+            if(result.data.data.createComment.ok == true){
+                console.log("ok")
+                window.location.reload()
+            }
+            else alert("create error")
+        }
+        else alert("lf")
+    }
+
     render() {
         
         return (
@@ -392,8 +482,38 @@ class PostView extends Component {
                             
                         </React.Fragment>
                 ))}
-                </div> 
+                <hr></hr>
+                
+                <div className="input-group">
+                    <textarea type="text" className="form-control" style={{"height":"50px"}} placeholder="Write your comment" onChange={this.handleChangeComment}></textarea>
+                    <div className="input-group-btn">
+                        <button className="btn bhi" style={{"border": "solid 1px #ccc", "height":"50px"}}
+                        onClick={ () =>this.setState(this.doCommentCreate(this.state.comment_content,"",this.state.postuuid))}>
+                            <svg className="bi bi-capslock-fill" width="24px" height="24px" viewBox="0 0 16 16" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H11.5v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1H1.654C.78 9.5.326 8.455.924 7.816L7.27 1.047zM4.5 13.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <hr></hr>
+                {this.state.comments.map(comment => (
+                <div className="my-4">
+                    <strong> {comment.commentWriter.username} </strong>
+                    <a>{moment(Date.parse(comment.commentDate)).fromNow()}</a>
+                    <br></br>
+                <a>{comment.commentContent}</a>
+                </div>
+                ))}
                 {this.EditModal()}
+                </div> 
+                
+
+                
+                
+
             </>
         );
     }
