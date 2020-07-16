@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Modal,Button,Form,Jumbotron,Container,Badge,Card} from 'react-bootstrap'
+import {Modal,Button,Form,Badge} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import Navigator from '../Navigator'
 import axios from 'axios';
@@ -9,41 +9,15 @@ import cookie from 'react-cookies';
 moment.locale('ko')
 
 
-
-const all_seminar = ``;
-
-const render_tags = (post) => {
-    if (post.tagKind)
-        return post.tagKind
-        .split(',')
-        .sort()
-        .map(tag => (
-        <Badge variant={(tag.indexOf('학년') > -1 ? "secondary" : "success") + " mx-1"}>{tag}</Badge>
-        ))
-    return ;
-}
-
-const cms = {
-    height : "24px",
-    fontSize: "16px",
-    color: "#202020",
-    resize: "none",
-    outline: "0 none",
-    lineHeight: "24px",
-    overflow: "hidden",
-    letterSpacing: "-.4px",
-    minHeight: "50px" 
-}
-
 class PostView extends Component {  
     constructor(props) {
         super(props);
         this.state = {
-            me: undefined,
+            me: cookie.load('me'),
             targetseminar:[],
             comments:[],
             comment_content:'',
-            postnamespace:'',
+            namespace:'',
             postuuid:'',
             currentTitle:'',
             currentContent:'',
@@ -74,11 +48,9 @@ class PostView extends Component {
     postbtn = (event) => {
         this.setState(this.doEditPost(this.state.postuuid,this.state.edit_title, this.state.edit_content, this.state.edit_tag, this.state.gradeone, this.state.gradetwo, this.state.gradethree))
     }
-    componentWillMount(){
-        this.setState( { me : cookie.load('me')})
-    }
+    
     componentDidMount() {        
-        this.state.postuuid = new URLSearchParams(this.props.location.search).get('v')
+        this.setState({postuuid:  new URLSearchParams(this.props.location.search).get('v')})
         axios({
             method: "POST",
             url: "http://localhost:8000/api",
@@ -117,7 +89,7 @@ class PostView extends Component {
                 "Access-Control-Allow-Origin": "*",
             }
         }).then(result => {
-            this.state.targetseminar = this.setState({ targetseminar:result.data.data.links });
+            this.setState({ targetseminar:result.data.data.links });
             console.log(this.state.targetseminar)
         });
 
@@ -163,9 +135,9 @@ class PostView extends Component {
             }
         })
 
-        if(result.status == 200){
+        if(result.status === 200){
             console.log(result.data.data.deletePost.ok)
-            if(result.data.data.deletePost.ok == true){
+            if(result.data.data.deletePost.ok === true){
                 window.history.back()
                 console.log("ok")
             }
@@ -199,8 +171,8 @@ class PostView extends Component {
                 "Authorization": cookie.load('token')
             }
         })
-        if(result.status == 200){
-            if(result.data.data.updatePost.ok == true){
+        if(result.status === 200){
+            if(result.data.data.updatePost.ok === true){
                 this.HideEditModal()
                 window.location.reload()
             }
@@ -209,24 +181,24 @@ class PostView extends Component {
     }
 
     whatkindpost = (post) =>{
-        if(post.postoffreeseminar != null) this.state.postnamespace = 'free'
-        else if(post.postofrequestseminar != null) this.state.postnamespace = 'request'
-        else if(post.postofrecruitseminar != null) this.state.postnamespace = 'recruit'
-        console.log(this.state.postnamespace)
+        if(post.postoffreeseminar != null) this.setState({namespace: 'free'}) 
+        else if(post.postofrequestseminar != null) this.setState({namespace: 'request'}) 
+        else if(post.postofrecruitseminar != null) this.setState({namespace: 'recruit'}) 
+        console.log(this.state.namespace)
     }
 
     printTitle = (post) => {
         console.log(post)
-        if(this.state.postnamespace == 'free'){
-            this.state.currentTitle = post.postoffreeseminar.title
+        if(this.state.namespace === 'free'){
+            this.setState({currentTitle: post.postoffreeseminar.title})
             return(
                 <h1 className=" pb-2 mb-0">
                     {post.postoffreeseminar.title}
                 </h1>
             );
         }
-        else if(this.state.postnamespace == 'request'){
-            this.state.currentTitle = post.postofrequestseminar.title
+        else if(this.state.namespace === 'request'){
+            this.setState({currentTitle: post.postofrequestseminar.title})
             return(
                 <h1 className=" pb-2 mb-0">
                     {post.postofrequestseminar.title}
@@ -237,8 +209,8 @@ class PostView extends Component {
                 </h1>
             );
         }
-        else if(this.state.postnamespace == 'recruit'){
-            this.state.currentTitle = post.postofrecruitseminar.title
+        else if(this.state.namespace === 'recruit'){
+            this.setState({currentTitle: post.postofrecruitseminar.title})
             return(
                 <h1 className=" pb-2 mb-0">
                     {post.postofrecruitseminar.title}
@@ -252,49 +224,49 @@ class PostView extends Component {
     }
 
     printmoment = (post) => {
-        console.log(this.state.postnamespace)
-        if(this.state.postnamespace == 'free') {return (moment(Date.parse(post.postoffreeseminar.createdAt)).fromNow());}
-        else if(this.state.postnamespace == 'request') {return (moment(Date.parse(post.postofrequestseminar.createdAt)).fromNow());}
-        else if(this.state.postnamespace == 'recruit') {return (moment(Date.parse(post.postofrecruitseminar.createdAt)).fromNow());}
+        console.log(this.state.namespace)
+        if(this.state.namespace === 'free') {return (moment(Date.parse(post.postoffreeseminar.createdAt)).fromNow());}
+        else if(this.state.namespace === 'request') {return (moment(Date.parse(post.postofrequestseminar.createdAt)).fromNow());}
+        else if(this.state.namespace === 'recruit') {return (moment(Date.parse(post.postofrecruitseminar.createdAt)).fromNow());}
     }
 
     printcontent = (post) => {
-        if(this.state.postnamespace == 'free') {
-            this.state.currentContent = post.postoffreeseminar.content
+        if(this.state.namespace === 'free') {
+            this.setState({currentContent: post.postoffreeseminar.content})
             return (
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
                     {post.postoffreeseminar.content.split(",").map(content =>(
                         <>
-                        <a>{content}</a>
+                        {content}
                         <br></br>
                         </>
                     ))}
                 </div>
             );
         }
-        else if(this.state.postnamespace == 'request') 
+        else if(this.state.namespace === 'request') 
         {
-            this.state.currentContent = post.postofrequestseminar.content
+            this.setState({currentContent: post.postofrequestseminar.content})
             return (
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
                     {post.postofrequestseminar.content.split(",").map(content =>(
                         <>
-                        <a>{content}</a>
-                        <br></br>
+                        {content}
+                        <br/>
                         </>
                     ))}
                 </div>
             );
         }
-        else if(this.state.postnamespace == 'recruit') 
+        else if(this.state.namespace === 'recruit') 
         {
-            this.state.currentContent = post.postofrecruitseminar.content
+            this.setState({currentContent: post.postofrecruitseminar.content})
             return (
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray">
                     {post.postofrecruitseminar.content.split(",").map(content =>(
                         <>
-                        <a>{content}</a>
-                        <br></br>
+                        {content}
+                        <br/>
                         </>
                     ))}
                 </div>
@@ -304,7 +276,7 @@ class PostView extends Component {
 
     setpermission = (post) => {
         if(this.state.me != null){
-            if(post.writer.username == this.state.me.username){
+            if(post.writer.username === this.state.me.username){
                 return(
                     <div>
                         <span onClick={this.ShowEditModal} style={{cursor: "pointer"}} className="mr-3">수정하기</span>
@@ -316,7 +288,7 @@ class PostView extends Component {
     }
     
     Editmodal_tag(){
-        if(this.state.postnamespace != 'free'){
+        if(this.state.namespace !== 'free'){
             return(
                 <select className="form-control mb-4 w-25" name="tag_kind" onChange={this.handleChangetag}>
                         <option>Web</option>
@@ -332,7 +304,7 @@ class PostView extends Component {
     }
 
     EditModal_recruit(){
-        if(this.state.postnamespace == 'recruit'){
+        if(this.state.namespace === 'recruit'){
             return(
                 <div className="py-3 my-3">
                     <h4 className="mb-3"> 타겟 학년 : </h4>
@@ -441,9 +413,9 @@ class PostView extends Component {
             }
         })
 
-        if(result.status == 200){
+        if(result.status === 200){
             console.log(result)
-            if(result.data.data.createComment.ok == true){
+            if(result.data.data.createComment.ok === true){
                 console.log("ok")
                 window.location.reload()
             }
@@ -491,7 +463,7 @@ class PostView extends Component {
                         onClick={ () =>this.setState(this.doCommentCreate(this.state.comment_content,"",this.state.postuuid))}>
                             <svg className="bi bi-capslock-fill" width="24px" height="24px" viewBox="0 0 16 16" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
+                                <path fillRule="evenodd"
                                     d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H11.5v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1H1.654C.78 9.5.326 8.455.924 7.816L7.27 1.047zM4.5 13.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1z"/>
                             </svg>
                         </button>
@@ -502,9 +474,9 @@ class PostView extends Component {
                 {this.state.comments.map(comment => (
                 <div className="my-4">
                     <strong> {comment.commentWriter.username} </strong>
-                    <a>{moment(Date.parse(comment.commentDate)).fromNow()}</a>
-                    <br></br>
-                <a>{comment.commentContent}</a>
+                    {moment(Date.parse(comment.commentDate)).fromNow()}
+                    <br/>
+                    {comment.commentContent}
                 </div>
                 ))}
                 {this.EditModal()}

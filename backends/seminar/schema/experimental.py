@@ -5,8 +5,7 @@ import graphene
 from graphql import ResolveInfo
 from graphql_jwt.decorators import login_required
 
-from seminar.models import PostOfFreeSeminar, PostOfRequestSeminar, PostOfRecruitSeminar, Link, Comment
-from backend_setting.models import Member
+from seminar.models import PostOfFreeSeminar, PostOfRequestSeminar, PostOfRecruitSeminar, Link
 
 
 class CreatePost(graphene.Mutation):
@@ -19,7 +18,7 @@ class CreatePost(graphene.Mutation):
     ok = graphene.Boolean()
 
     @login_required
-    def mutate(self, info: ResolveInfo, title, content, tagKind, KindOf):
+    def mutate(self, info: ResolveInfo, title, content, KindOf, tagKind=None):
         link = Link()
         link.uuid = uuid4()
         link.writer = info.context.user
@@ -59,12 +58,12 @@ class UpdatePost(graphene.Mutation):
         uuid = graphene.UUID()
         title = graphene.String(required=True)
         content = graphene.String(required=True)
-        tagkind = graphene.String()
+        tagkind = graphene.String(required=False)
 
     ok = graphene.Boolean()
 
     @staticmethod
-    def mutate(self, info: ResolveInfo, uuid, title, content, tagkind):
+    def mutate(self, info: ResolveInfo, uuid, title, content, tagkind=None):
         link = Link.objects.get(uuid=uuid)
         post = None
         if link.namespace == "PostOfFreeSeminar":
@@ -106,17 +105,7 @@ class DeletePost(graphene.Mutation):
         return DeletePost(ok=ok)
 
 
-
-
-
-
-
-
-
 class PostMutations(graphene.ObjectType):
     delete_post = DeletePost.Field()
     create_post = CreatePost.Field()
     update_post = UpdatePost.Field()
-
-
-

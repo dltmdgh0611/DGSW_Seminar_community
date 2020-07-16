@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PageOfMain from './Seminar/PageOfMain' 
-import PageOfFreeSeminar from './Seminar/View/PageOfFreeSeminar'
-import PageOfRequestSeminar from './Seminar/View/PageOfRequestSeminar' 
-import PageOfRecruitSeminar from './Seminar/View/PageOfRecruitSeminar' 
+import PageOfFreeSeminar, { PostView  as ViewOfFreeSeminar } from './Seminar/View/PageOfFreeSeminar'
+import PageOfRequestSeminar, { PostView  as ViewOfRequestSeminar} from './Seminar/View/PageOfRequestSeminar' 
+import PageOfRecruitSeminar, { PostView as ViewOfRecruitSeminar} from './Seminar/View/PageOfRecruitSeminar' 
 import PageOfSearchResults from './Seminar/View/PageOfSearchResults'
 import PostView from './Seminar/Post/PostView'
 import {
@@ -18,6 +18,9 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={PageOfMain}/>
           <Route exact path="/free_seminar" component={PageOfFreeSeminar}/>
+          <Route path="/postview/free_seminar" component={ViewOfFreeSeminar}/>
+          <Route path="/postview/request_seminar" component={ViewOfRequestSeminar}/>
+          <Route path="/postview/recruit_seminar" component={ViewOfRecruitSeminar}/>
           <Route exact path="/request_seminar" component={PageOfRequestSeminar}/>
           <Route exact path="/recruit_seminar" component={PageOfRecruitSeminar}/>
           <Route exact path="/search" component={PageOfSearchResults}/>

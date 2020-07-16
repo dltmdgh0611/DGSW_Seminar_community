@@ -14,7 +14,7 @@ class MemberControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            me: undefined,
+            me: cookie.load('me'),
             show_login_modal: null,
             show_signup_modal: null,
             show_signuperror_modal: null,
@@ -33,11 +33,7 @@ class MemberControl extends Component {
 
     ShowLoginModal = () => { this.setState({show_login_modal: true}); }
     HideLoginModal = () => { this.setState({show_login_modal: false}); }
-    ShowSignupModal = () => { this.setState({show_signup_modal: true}); 
-    this.state.email_error = ''
-    this.state.id_error = ''
-    this.state.pwc_error = ''
-    this.state.pw_error = ''}
+    ShowSignupModal = () => { this.setState({show_signup_modal: true}); }
     HideSignupModal = () => { this.setState({show_signup_modal: false}); }
 
 
@@ -53,11 +49,6 @@ class MemberControl extends Component {
         });
         console.log(this.state)
     };
-
-    componentWillMount(){
-        this.setState( { me : cookie.load('me')})
-    }
-
 
     LoginModal(props) {   
         return (
