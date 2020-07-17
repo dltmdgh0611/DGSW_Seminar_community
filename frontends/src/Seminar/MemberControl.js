@@ -5,7 +5,7 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal'
 import cookie from 'react-cookies';
 import { v4 as uuidv4 } from 'uuid';
-
+import moment from 'moment';
 
   
 
@@ -43,11 +43,9 @@ class MemberControl extends Component {
         const target = event.target
         const names = target.name
 
-        console.log(names, target.value)
         this.setState({
             [names]: target.value
         });
-        console.log(this.state)
     };
 
     LoginModal(props) {   
@@ -135,7 +133,7 @@ class MemberControl extends Component {
             method: "POST",
             url: "http://localhost:8000/api",
             data: {
-                query: `mutation {tokenAuth(username: "${id_value}", password: "${pw_value}"){success,errors, unarchiving, token, unarchiving, user {id, username, uuid }}}`
+                query: `mutation {tokenAuth(username: "${id_value}", password: "${pw_value}"){success,errors, unarchiving, token, unarchiving, refreshToken, user {id, username, uuid }}}`
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -145,24 +143,21 @@ class MemberControl extends Component {
         if (result.status === 200) 
             if (result.data.data.tokenAuth.success === true) 
             {    
-                console.log(result)
                 const user = result.data.data.tokenAuth.user;
                 
                 this.setState({'me': user})
-                cookie.save('me', user,{path:'/'}, {maxAge : 3600*24*30})
-                cookie.save('token', "JWT " + result.data.data.tokenAuth.token ,{path:'/'}, {maxAge : 3600*24*30})
-                //cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'}, {maxAge : 3600*24*30})
+                cookie.save('me', user,{path:'/'},  {maxAge : 3600})
+                cookie.save('token', "JWT " + result.data.data.tokenAuth.token ,{path:'/'}, {maxAge : 3600})
+                cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'}, {maxAge : 3600})
                 this.HideLoginModal()
                 return {'me': user}
             }
             else alert("올바른 id와 pw를 입력해주세요.")
-        else console.log("hosterror")
+        else alert("hosterror")
         return {}
     }
 
     async doSignup(id_value, pw_value, pw_confirm, email_value){
-        console.log(email_value,id_value, pw_value, pw_confirm)
-
         const result = await axios({
             method: "POST",
             url: "http://localhost:8000/api",
@@ -177,8 +172,7 @@ class MemberControl extends Component {
                     ) {
                       success,
                       errors,
-                      token,
-                      refreshToken
+                      token
                     }
                   }`
             },
@@ -187,9 +181,6 @@ class MemberControl extends Component {
             }
         })
         if (result.status === 200){
-            
-
-            console.log(result.data.data.register.errors)
             if(result.data.data.register.success){
                 this.HideSignupModal()
                 alert("회원가입이 완료되었습니다")
@@ -215,6 +206,31 @@ class MemberControl extends Component {
         return {'me': undefined}
     }
 
+    doRefresh() {
+        const refreshToken = cookie.load('refreshToken')
+        const Q = `mutation {
+            refreshToken(refreshToken: "${refreshToken}") {
+              token
+              payload
+              refreshToken
+            }
+          }`
+          axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: Q
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            }
+        }).then(result => {
+            cookie.save('token', 'JWT ' + result.data.data.refreshToken.token, {maxAge: 3600});
+            cookie.save('refreshToken', result.data.data.refreshToken.refreshToken, {maxAge: 3600});
+        });
+
+    }
+
     render() {
         if(this.state.me === undefined)
         {
@@ -233,6 +249,7 @@ class MemberControl extends Component {
         }
         else
         {
+            this.doRefresh();
             return(
                 <React.Fragment>
                     <label className="nav-link disabled ml-auto">{this.state.me.username}</label>

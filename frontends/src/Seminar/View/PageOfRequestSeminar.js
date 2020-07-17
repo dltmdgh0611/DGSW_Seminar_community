@@ -42,12 +42,10 @@ class WriteForm extends Component {
             Content: "",
             UUID: ""
         }      
-        console.log(this.props)
         if (this.props.Edit === true) {
             this.state.Title =  this.props.Title;
             this.state.Content = this.props.Content
         }
-        console.log(this.state)
         this.input_title = React.createRef();
         this.input_content = React.createRef();
         this.input_tag = React.createRef();
@@ -166,6 +164,8 @@ class PostView extends Component {
             me: cookie.load('me'),
             post: null,
             comments:[],
+            recommend:[],
+            isRecommend:false,
             show_post_modal: null
         }
         this.commnet_form = React.createRef();      
@@ -224,7 +224,28 @@ class PostView extends Component {
             this.setState({ comments:result.data.data.comment });
         });
         this.setState({ link_uuid: link_uuid });
-        
+        axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `query{
+                    recommend(refLinkUuid:"${link_uuid}")
+                    {
+                      id,
+                      user {
+                        uuid
+                      }
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            }
+        }).then(result => {
+            
+            this.setState({ recommend:result.data.data.recommend });
+            
+        });
         
     }
 
@@ -246,10 +267,8 @@ class PostView extends Component {
         })
 
         if(result.status === 200){
-            console.log(result.data.data.deletePost.ok)
             if(result.data.data.deletePost.ok === true){
                 window.history.back()
-                console.log("ok")
             }
             else alert("delete error")
         }
@@ -314,9 +333,7 @@ class PostView extends Component {
         })
 
         if(result.status === 200){
-            console.log(result)
             if(result.data.data.createComment.ok === true){
-                console.log("ok")
                 window.location.reload();
             }
             else alert("create error")
@@ -357,6 +374,108 @@ class PostView extends Component {
         else alert("lf")
     }
 
+
+    async ADDRecommend(user, post){
+        const result = await axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `mutation{
+                    createRecommend(
+                      userId:"${user}"
+                      linkId:"${post}"
+                    ){
+                     ok 
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
+            }
+        })
+        if(result.status === 200){
+            if(result.data.data.createRecommend.ok === true){
+                window.location.reload();
+            }
+            else alert("delete error")
+        }
+        else alert("delete error")
+    }
+
+    async DELRecommend(user, post){
+        const result = await axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `mutation{
+                    deleteRecommend(
+                      userId:"${user}"
+                      linkId:"${post}"
+                    ){
+                     ok 
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
+            }
+        })
+        if(result.status === 200){
+            if(result.data.data.deleteRecommend.ok === true){
+                window.location.reload();
+            }
+            else alert("delete error")
+        }
+        else alert("delete error")
+    }
+
+    toggleRecommend(){     
+        const flagDiv={
+            float: "left",
+            borderRadius: "16px",
+            border: "1px solid #959595",
+            borderColor: "rgba(185,185,185,0.5)",
+            cursor: "pointer"
+        }
+        
+            this.state.recommend.map(recommend => {
+                if(recommend.user.uuid === this.state.me.uuid){
+                    this.state.isRecommend = true
+                }
+            })
+
+            if(this.state.isRecommend){
+                return (
+                        <div className="px-2 pb-1" style={flagDiv} onClick={() =>this.setState(this.DELRecommend(this.state.me.uuid, this.state.link_uuid))}>
+                            <svg className="bi bi-flag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
+                            <path fillRule="evenodd"
+                                d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916A.5.5 0 0 1 3.5 9V3a.5.5 0 0 1 .223-.416l.04-.026z"/>
+                            </svg>
+                            <a className="mx-2">{this.state.recommend.length}</a>
+                        </div>
+                );
+            }
+            else{
+                return (
+                        <div className="px-2 pb-1" style={flagDiv} onClick={() =>this.setState(this.ADDRecommend(this.state.me.uuid, this.state.link_uuid))}>
+                            <svg className="bi bi-flag" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
+                            <path fillRule="evenodd"
+                                d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916a.5.5 0 1 1-.515-.858C4.735 7.909 5.348 7.5 6.5 7.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126.187-.068.376-.153.593-.25.058-.027.117-.053.18-.08.456-.204 1-.43 1.64-.512V2.543c-.433.074-.83.234-1.234.414l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 3.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916a.5.5 0 0 1-.554-.832l.04-.026z"/>
+                            </svg>
+                            <a className="mx-2">{this.state.recommend.length}</a>
+                        </div>
+                );
+            } 
+        
+    }
+
+
     render() {        
         let post_view = <></>;
         if (this.state.post != null) {
@@ -389,6 +508,10 @@ class PostView extends Component {
                        this.state.post.postofrequestseminar.content.replaceAll(",", "<br/>")
                     }}
                 />
+
+                <div className="align-items-center mb-5">
+                    {this.toggleRecommend()}
+                </div>
                 
                 <hr/>                
                 <div className="input-group">

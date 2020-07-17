@@ -74,7 +74,6 @@ class PageOfSearchResults extends Component {
                             {render_tags(post)}
                         </Card.Title>
                         <Card.Text as="h5">
-                            {post.namespace} 
                             {moment(Date.parse(post.createdAt)).fromNow()} {post.writer}
                         </Card.Text>
                     </Card>
