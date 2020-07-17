@@ -212,7 +212,7 @@ class PostView extends Component {
         }).then(result => {
             this.setState({ comments:result.data.data.comment });
         });
-        this.setState({ UUID: link_uuid });
+        this.setState({ link_uuid: link_uuid });
         
         
     }
@@ -282,15 +282,16 @@ class PostView extends Component {
     }
 
     async doCommentCreate(user){
+        
         const result = await axios({
             method: "POST",
             url: "http://localhost:8000/api",
             data: {
                 query: `mutation{
                     createComment(
-                      content:"${this.commnet_form.current.value}",
+                      content:"${this.commnet_form.current.value.split("\n")}",
                       linkId:"${this.state.link_uuid}",
-                      userId:"3440eb36-70c3-480a-93fb-1116932afdd6"
+                      userId:"${this.state.me.uuid}"
                     ){
                       ok
                     }
@@ -309,6 +310,40 @@ class PostView extends Component {
                 window.location.reload();
             }
             else alert("create error")
+        }
+        else alert("lf")
+    }
+
+
+    deleteCommentValue(comment){
+        if(comment.commentWriter.username === this.state.me.username){
+            return(
+                <span style={{"cursor" : "pointer"}} onClick={ () => this.setState(this.deleteComment(comment))}>   삭제하기</span>
+            );
+        }
+    }
+
+    async deleteComment(comment){
+        const result = await axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `mutation{
+                    deleteComment(uuid:"${comment.uuid}"){
+                      ok
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
+            }
+        })
+        if(result.status === 200){
+            if(result.data.data.deleteComment.ok === true){
+                window.location.reload();
+            }
+            else alert("delete error")
         }
         else alert("lf")
     }
@@ -359,10 +394,18 @@ class PostView extends Component {
                 <hr/>
                 {this.state.comments.map(comment => (
                     <div key={comment.uuid} className="my-4">
+                        <div className="px-3 py-2" style={{"display" : "inline-block", "borderRadius": "15px", "backgroundColor": "#F0F2F5"}}>
                         <strong> {comment.commentWriter.username} </strong>
                         {moment(Date.parse(comment.commentDate)).fromNow()}
+                        {this.deleteCommentValue(comment)}
                         <br/>
-                        {comment.commentContent}
+                        
+                        <div
+                            dangerouslySetInnerHTML = {{__html:
+                                comment.commentContent.replaceAll(",", "<br/>")
+                            }}
+                        />
+                        </div>
                     </div>
                 ))}
             </div> 
@@ -428,7 +471,7 @@ class PageOfFreeSeminar extends Component {
                 </Card>
                 <WriteForm Show={this.state.show_post_modal} ref={this.write_form}/>
                 {this.state.posts.map(post => (
-                    <Card key={post.id} className="m-3 p-3" style={{ "cursor": "pointer" }} 
+                    <Card key={post.id} className="m-3 p-3 shadow-sm" style={{ "cursor": "pointer" }} 
                     onClick={(e) => this.GoPost(e)}
                     value ={post.link.uuid}
                     >

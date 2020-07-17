@@ -299,9 +299,9 @@ class PostView extends Component {
             data: {
                 query: `mutation{
                     createComment(
-                      content:"${this.commnet_form.current.value}",
+                      content:"${this.commnet_form.current.value.split("\n")}",
                       linkId:"${this.state.link_uuid}",
-                      userId:"3440eb36-70c3-480a-93fb-1116932afdd6"
+                      userId:"${this.state.me.uuid}"
                     ){
                       ok
                     }
@@ -320,6 +320,39 @@ class PostView extends Component {
                 window.location.reload();
             }
             else alert("create error")
+        }
+        else alert("lf")
+    }
+
+    deleteCommentValue(comment){
+        if(comment.commentWriter.username === this.state.me.username){
+            return(
+                <span style={{"cursor" : "pointer"}} onClick={ () => this.setState(this.deleteComment(comment))}>   삭제하기</span>
+            );
+        }
+    }
+
+    async deleteComment(comment){
+        const result = await axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `mutation{
+                    deleteComment(uuid:"${comment.uuid}"){
+                      ok
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
+            }
+        })
+        if(result.status === 200){
+            if(result.data.data.deleteComment.ok === true){
+                window.location.reload();
+            }
+            else alert("delete error")
         }
         else alert("lf")
     }
@@ -374,11 +407,19 @@ class PostView extends Component {
                 <hr/>
                 {this.state.comments.map(comment => (
                     <div key={comment.uuid} className="my-4">
-                        <strong> {comment.commentWriter.username} </strong>
-                        {moment(Date.parse(comment.commentDate)).fromNow()}
-                        <br/>
-                        {comment.commentContent}
+                    <div className="px-3 py-2" style={{"display" : "inline-block", "borderRadius": "15px", "backgroundColor": "#F0F2F5"}}>
+                    <strong> {comment.commentWriter.username} </strong>
+                    {moment(Date.parse(comment.commentDate)).fromNow()}
+                    {this.deleteCommentValue(comment)}
+                    <br/>
+                    
+                    <div
+                        dangerouslySetInnerHTML = {{__html:
+                            comment.commentContent.replaceAll(",", "<br/>")
+                        }}
+                    />
                     </div>
+                </div>
                 ))}
             </div> 
             );

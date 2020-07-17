@@ -135,7 +135,7 @@ class MemberControl extends Component {
             method: "POST",
             url: "http://localhost:8000/api",
             data: {
-                query: `mutation {tokenAuth(username: "${id_value}", password: "${pw_value}"){success,errors, unarchiving, token, refreshToken, unarchiving, user {id, username }}}`
+                query: `mutation {tokenAuth(username: "${id_value}", password: "${pw_value}"){success,errors, unarchiving, token, unarchiving, user {id, username, uuid }}}`
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -151,7 +151,7 @@ class MemberControl extends Component {
                 this.setState({'me': user})
                 cookie.save('me', user,{path:'/'}, {maxAge : 3600*24*30})
                 cookie.save('token', "JWT " + result.data.data.tokenAuth.token ,{path:'/'}, {maxAge : 3600*24*30})
-                cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'}, {maxAge : 3600*24*30})
+                //cookie.save('refreshToken', result.data.data.tokenAuth.refreshToken ,{path:'/'}, {maxAge : 3600*24*30})
                 this.HideLoginModal()
                 return {'me': user}
             }

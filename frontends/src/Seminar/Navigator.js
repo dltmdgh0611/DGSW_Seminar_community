@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import MemberControl from './MemberControl'
+import cookie from 'react-cookies';
+import axios from 'axios';
 
 
 
@@ -20,6 +22,30 @@ class Navigator extends Component {
 
     }
 
+    refresh() {
+        const token = cookie.load('token')
+        const Q = `mutation RefreshToken($token: String!) {
+            refreshToken(token: ${token}) {
+              token
+              payload
+              refreshExpiresIn
+            }
+          }`
+          axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: Q
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            }
+        }).then(result => {
+            console.log(result)
+        });
+
+    }
+
     render() {
         return (
             <Navbar bg="dark" variant="dark">
@@ -28,6 +54,9 @@ class Navigator extends Component {
                     <Form.Row>
                         <Col>
                             <Form.Control type="text" placeholder="Search..." onChange={(e) => {this.search_query = e.target.value}}/>
+                        </Col>
+                        <Col xs="auto">
+                            <Button onClick={this.refresh.bind(this)} variant="success">CC</Button>
                         </Col>
                         <Col xs="auto">
                             <Button onClick={this.handleSubmit.bind(this)} variant="success" type="submit">Q</Button>

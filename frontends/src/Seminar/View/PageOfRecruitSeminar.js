@@ -64,13 +64,20 @@ class WriteForm extends Component {
 
     Show() { this.setState({Show: true}) }
     Hide() { this.setState({Show: false}) }
-    async  Submit(title, content, tagKind, uuid ,g1, g2, g3) {
+    async  Submit(arg) {
+/*{
+                    title: this.input_title.current.value, 
+                    content: this.input_content.current.value, 
+                    tag: this.input_tag.current.value,
+                    uuid: new URLSearchParams(window.location.search).get('v'), 
+                    grade1: this.grade1.current.checked, 
+                    grade2: this.grade2.current.checked, 
+                    grade3: this.grade3.current.checked} */
 
-        console.log(g1, g2, g3)
-        if (g1) tagKind += ',1학년'
-        if (g2) tagKind += ',2학년'
-        if (g3) tagKind += ',3학년'
-        console.log(tagKind)
+        if (arg.grade1) arg.tag += ',1학년'
+        if (arg.grade2) arg.tag += ',2학년'
+        if (arg.grade3) arg.tag += ',3학년'
+        
         if (this.props.Edit === true) {
             const result = await axios({
                 method: "POST",
@@ -78,10 +85,10 @@ class WriteForm extends Component {
                 data: {
                     query: `mutation{
                         updatePost(
-                          uuid:"${uuid}"
-                          title:"${title}"
-                          tagkind:"${tagKind}"
-                          content:"${content.split("\n")}"
+                          uuid:"${arg.uuid}"
+                          title:"${arg.title}"
+                          tagkind:"${arg.tag}"
+                          content:"${arg.content.split("\n")}"
                         ){
                           ok
                         }
@@ -106,9 +113,9 @@ class WriteForm extends Component {
                 data: {
                     query: `mutation {
                         createPost(
-                            title:"${title}",
-                            content:"${content.split("\n")}",
-                            tagKind:"${tagKind}"
+                            title:"${arg.title}",
+                            content:"${arg.content.split("\n")}",
+                            tagKind:"${arg.tag}"
                             KindOf:"PostOfRecruitSeminar"
                         )
                         {
@@ -160,27 +167,35 @@ class WriteForm extends Component {
                         <option>ETC</option>
                     </select>
                     <div className="py-3 my-3">
-                        <h4 className="mb-3"> 차시 수 : </h4>
-                        <div className="inline mb-4">
-                            <input type="text" style={{"width" : "50px"}} name="class_count"></input> 차시
+                        <div className="d-inline-flex">
+                            <h4 className="mb-3"> 차시 수 : </h4>
+                            <div className="inline mx-3 mb-4">
+                                <input type="text" style={{"width" : "50px"}} name="class_count"></input> 차시
+                            </div>
                         </div>
-                        <h4 className="mb-3"> 타겟 학년 : </h4>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="checkbox" id="inlineCheckbox1" name="tag_kind" ref={this.grade1}/>
-                            <label className="form-check-label" for="inlineCheckbox1" name="tag_kind">1학년</label>
+                        <br/>
+                        <div className="d-inline-flex">
+                            <h4 className="mb-4"> 타겟 학년 : </h4>
+                            <div className="form-check form-check-inline mx-3 mb-3">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox1" name="tag_kind" ref={this.grade1}/>
+                                <label className="form-check-label" for="inlineCheckbox1" name="tag_kind">1학년</label>
+                            </div>
+                            <div className="form-check form-check-inline mb-3">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox2" name="tag_kind" ref={this.grade2}/>
+                                <label className="form-check-label" for="inlineCheckbox2" name="tag_kind">2학년</label>
+                            </div>
+                            <div className="form-check form-check-inline mb-3">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox3" name="tag_kind" ref={this.grade3}/>
+                                <label className="form-check-label" for="inlineCheckbox3">3학년</label>
+                            </div>
                         </div>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="checkbox" id="inlineCheckbox2" name="tag_kind" ref={this.grade2}/>
-                            <label className="form-check-label" for="inlineCheckbox2" name="tag_kind">2학년</label>
-                        </div>
-                        <div className="form-check form-check-inline mb-4">
-                            <input className="form-check-input" type="checkbox" id="inlineCheckbox3" name="tag_kind" ref={this.grade3}/>
-                            <label className="form-check-label" for="inlineCheckbox3">3학년</label>
-                        </div>
-                        <h4 className="mb-3"> 최소 인원 ~ 최대 인원 : </h4>
-                        <div className="inline mb-4">
-                            <input type="text" style={{"width" : "50px"}} name="min_people_count"></input> 명
-                            ~ <input type="text" style={{"width" : "50px"}} name="max_people_count"></input> 명
+                        <br/>
+                        <div className="d-inline-flex">
+                            <h4 className="mb-3"> 최소 인원 ~ 최대 인원 : </h4>
+                            <div className="inline mb-4 mx-3">
+                                <input type="text" style={{"width" : "50px"}} name="min_people_count"></input> 명
+                                ~ <input type="text" style={{"width" : "50px"}} name="max_people_count"></input> 명
+                            </div>
                         </div>
                         
                     </div>
@@ -192,14 +207,14 @@ class WriteForm extends Component {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={ () => this.Submit(
-                    this.input_title.current.value, 
-                    this.input_content.current.value, 
-                    this.input_tag.current.value,
-                    new URLSearchParams(window.location.search).get('v'), 
-                    this.grade1.current.checked, 
-                    this.grade2.current.checked, 
-                    this.grade3.current.checked)}>작성하기</Button>
+                <Button onClick={ () => this.Submit({
+                    title: this.input_title.current.value, 
+                    content: this.input_content.current.value, 
+                    tag: this.input_tag.current.value,
+                    uuid: new URLSearchParams(window.location.search).get('v'), 
+                    grade1: this.grade1.current.checked, 
+                    grade2: this.grade2.current.checked, 
+                    grade3: this.grade3.current.checked})}>작성하기</Button>
             </Modal.Footer>
             </Modal>
         );
@@ -347,9 +362,9 @@ class PostView extends Component {
             data: {
                 query: `mutation{
                     createComment(
-                      content:"${this.commnet_form.current.value}",
+                      content:"${this.commnet_form.current.value.split("\n")}",
                       linkId:"${this.state.link_uuid}",
-                      userId:"3440eb36-70c3-480a-93fb-1116932afdd6"
+                      userId:"${this.state.me.uuid}"
                     ){
                       ok
                     }
@@ -368,6 +383,39 @@ class PostView extends Component {
                 window.location.reload();
             }
             else alert("create error")
+        }
+        else alert("lf")
+    }
+
+    deleteCommentValue(comment){
+        if(comment.commentWriter.username === this.state.me.username){
+            return(
+                <span style={{"cursor" : "pointer"}} onClick={ () => this.setState(this.deleteComment(comment))}>   삭제하기</span>
+            );
+        }
+    }
+
+    async deleteComment(comment){
+        const result = await axios({
+            method: "POST",
+            url: "http://localhost:8000/api",
+            data: {
+                query: `mutation{
+                    deleteComment(uuid:"${comment.uuid}"){
+                      ok
+                    }
+                  }`
+            },
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')
+            }
+        })
+        if(result.status === 200){
+            if(result.data.data.deleteComment.ok === true){
+                window.location.reload();
+            }
+            else alert("delete error")
         }
         else alert("lf")
     }
@@ -422,11 +470,19 @@ class PostView extends Component {
                 <hr/>
                 {this.state.comments.map(comment => (
                     <div key={comment.uuid} className="my-4">
-                        <strong> {comment.commentWriter.username} </strong>
-                        {moment(Date.parse(comment.commentDate)).fromNow()}
-                        <br/>
-                        {comment.commentContent}
+                    <div className="px-3 py-2" style={{"display" : "inline-block", "borderRadius": "15px", "backgroundColor": "#F0F2F5"}}>
+                    <strong> {comment.commentWriter.username} </strong>
+                    {moment(Date.parse(comment.commentDate)).fromNow()}
+                    {this.deleteCommentValue(comment)}
+                    <br/>
+                    
+                    <div
+                        dangerouslySetInnerHTML = {{__html:
+                            comment.commentContent.replaceAll(",", "<br/>")
+                        }}
+                    />
                     </div>
+                </div>
                 ))}
             </div> 
             );

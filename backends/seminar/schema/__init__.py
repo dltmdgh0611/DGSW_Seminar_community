@@ -1,5 +1,6 @@
 import graphene
 from graphql_auth.schema import UserQuery, MeQuery
+from graphql_jwt import Refresh
 
 from .category import PostQuery
 from .comment import CommentQuery
@@ -13,7 +14,7 @@ class MasterQuery(UserQuery, MeQuery, PostQuery, SearchOfCategoryQuery, CommentQ
     pass
 
 
-class MasterMutation(PostMutations, CommentMutations, AccountMutations, graphene.ObjectType):
+class MasterMutation(PostMutations, CommentMutations, AccountMutations, Refresh, graphene.ObjectType):
     pass
 
 
