@@ -4,9 +4,7 @@ import Form from 'react-bootstrap/Form'
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal'
 import cookie from 'react-cookies';
-import { v4 as uuidv4 } from 'uuid';
-import moment from 'moment';
-
+import { v4 as uuidv4 } from 'uuid';    
   
 
 class MemberControl extends Component {
@@ -137,6 +135,7 @@ class MemberControl extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         })
             
@@ -178,6 +177,7 @@ class MemberControl extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         })
         if (result.status === 200){

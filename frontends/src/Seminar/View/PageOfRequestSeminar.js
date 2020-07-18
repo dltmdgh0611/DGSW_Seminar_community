@@ -197,6 +197,7 @@ class PostView extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             this.setState({ post:result.data.data.links[0] });
@@ -219,6 +220,7 @@ class PostView extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             this.setState({ comments:result.data.data.comment });
@@ -240,6 +242,7 @@ class PostView extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             
@@ -334,7 +337,7 @@ class PostView extends Component {
 
         if(result.status === 200){
             if(result.data.data.createComment.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("create error")
         }
@@ -367,7 +370,7 @@ class PostView extends Component {
         })
         if(result.status === 200){
             if(result.data.data.deleteComment.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("delete error")
         }
@@ -396,7 +399,7 @@ class PostView extends Component {
         })
         if(result.status === 200){
             if(result.data.data.createRecommend.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("delete error")
         }
@@ -424,7 +427,7 @@ class PostView extends Component {
         })
         if(result.status === 200){
             if(result.data.data.deleteRecommend.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("delete error")
         }
@@ -580,6 +583,7 @@ class PageOfRequestSeminar extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             this.setState({ posts:result.data.data.postsOfRequestSeminar });

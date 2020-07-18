@@ -2,23 +2,23 @@ from datetime import datetime
 from uuid import uuid4
 
 import graphene
-
+from graphql_jwt.decorators import login_required
 
 from seminar.models import Comment
 from seminar.models import Link
-from backend_setting.models import Member
+
 
 class CreateComment(graphene.Mutation):
     class Arguments:
         content = graphene.String(required=True)
         link_id = graphene.UUID(required=True)
-        user_id = graphene.UUID(required=True)
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, content, link_id, user_id):
+    @login_required
+    def mutate(self, info, content, link_id):
         link = Link(uuid=link_id)
-        user = Member(uuid=user_id)
+        user = info.context.user
         comment = Comment(
             ref_link=link,
             comment_date=datetime.now(),
@@ -36,10 +36,14 @@ class DeleteComment(graphene.Mutation):
 
     ok = graphene.Boolean()
 
+    @login_required
     def mutate(self, info, uuid):
-        Comment.objects.get(uuid=uuid).delete()
-
-        ok = len(Comment.objects.filter(uuid=uuid)) == 0
+        comment = Comment.objects.get(uuid=uuid)
+        if info.context.user.id == comment.comment_writer.id:
+            ok = False
+        else:
+            Comment.objects.get(uuid=uuid).delete()
+            ok = len(Comment.objects.filter(uuid=uuid)) == 0
         return DeleteComment(ok=ok)
 
 

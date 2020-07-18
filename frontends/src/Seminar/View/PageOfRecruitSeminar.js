@@ -57,10 +57,6 @@ class WriteForm extends Component {
         this.grade3 = React.createRef();
     }
 
-    handleChangetag_grade1 = (event) => {this.setState({g1 : !this.state.g1})}
-    handleChangetag_grade2 = (event) => {this.setState({g2 : !this.state.g2})}
-    handleChangetag_grade3 = (event) => {this.setState({g3 : !this.state.g3})}
-
     Show() { this.setState({Show: true}) }
     Hide() { this.setState({Show: false}) }
     async  Submit(arg) {
@@ -260,9 +256,9 @@ class PostView extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
-            console.log(result.data.data.links[0]);
             this.setState({ post:result.data.data.links[0] });
         });
 
@@ -283,6 +279,7 @@ class PostView extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             this.setState({ comments:result.data.data.comment });
@@ -304,6 +301,7 @@ class PostView extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             
@@ -331,10 +329,8 @@ class PostView extends Component {
         })
 
         if(result.status === 200){
-            console.log(result.data.data.deletePost.ok)
             if(result.data.data.deletePost.ok === true){
                 window.history.back()
-                console.log("ok")
             }
             else alert("delete error")
         }
@@ -400,10 +396,8 @@ class PostView extends Component {
         })
 
         if(result.status === 200){
-            console.log(result)
             if(result.data.data.createComment.ok === true){
-                console.log("ok")
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("create error")
         }
@@ -436,7 +430,7 @@ class PostView extends Component {
         })
         if(result.status === 200){
             if(result.data.data.deleteComment.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("delete error")
         }
@@ -464,7 +458,7 @@ class PostView extends Component {
         })
         if(result.status === 200){
             if(result.data.data.createRecommend.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("delete error")
         }
@@ -492,7 +486,7 @@ class PostView extends Component {
         })
         if(result.status === 200){
             if(result.data.data.deleteRecommend.ok === true){
-                window.location.reload();
+                this.setState({'__dummy__': moment()});
             }
             else alert("delete error")
         }
@@ -638,11 +632,6 @@ class PageOfRecruitSeminar extends Component {
 
     
 
-    handleChangetag_grade1 = (event) => {this.setState({gradeone : !this.state.gradeone}); console.log(this.state.gradeone) }
-    handleChangetag_grade2 = (event) => {this.setState({gradetwo : !this.state.gradetwo}); console.log(this.state.gradetwo)}
-    handleChangetag_grade3 = (event) => {this.setState({gradethree : !this.state.gradethree}); console.log(this.state.gradethree)}
-
-
     componentDidMount() {        
         axios({
             method: "POST",
@@ -652,6 +641,7 @@ class PageOfRecruitSeminar extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token'),
             }
         }).then(result => {
             this.setState({ posts: result.data.data.postsOfRecruitSeminar });

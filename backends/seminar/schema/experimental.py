@@ -62,7 +62,7 @@ class UpdatePost(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @staticmethod
+    @login_required
     def mutate(self, info: ResolveInfo, uuid, title, content, tagkind=None):
         link = Link.objects.get(uuid=uuid)
         post = None
@@ -91,7 +91,7 @@ class DeletePost(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @staticmethod
+    @login_required
     def mutate(self, info, uuid):
         link = Link.objects.get(uuid=uuid)
         if link.namespace == "PostOfFreeSeminar":

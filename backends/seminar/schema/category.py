@@ -1,5 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 
 from backend_setting.models import Member
 from seminar.models import PostOfRequestSeminar, PostOfRecruitSeminar, PostOfFreeSeminar, Link

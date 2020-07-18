@@ -6,6 +6,8 @@ import Navigator from '../Navigator'
 import moment from 'moment';
 import 'moment/locale/ko'
 import axios from 'axios';
+import cookie from 'react-cookies';
+
 moment.locale('ko')
 
 
@@ -42,6 +44,7 @@ class PageOfSearchResults extends Component {
                 },
                 headers: {
                     "Access-Control-Allow-Origin": "*",
+                    "Authorization": cookie.load('token'),
                 }
             }).then(result => {this.search_result = 
                 this.setState({ search_result:result.data.data.search });

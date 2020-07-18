@@ -1,5 +1,4 @@
 import graphene
-from graphene.types.resolver import dict_resolver
 
 from seminar.models import PostOfFreeSeminar, PostOfRecruitSeminar, PostOfRequestSeminar, Link
 
