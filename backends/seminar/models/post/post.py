@@ -15,6 +15,7 @@ class Post(models.Model):
 
     category = None
 
+    @property
     def update_vote_count(self):
         self.vote_count = len(self.link.recommends.all())
 

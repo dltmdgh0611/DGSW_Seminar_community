@@ -39,11 +39,13 @@ class DeleteComment(graphene.Mutation):
     @login_required
     def mutate(self, info, uuid):
         comment = Comment.objects.get(uuid=uuid)
-        if info.context.user.id == comment.comment_writer.id:
-            ok = False
-        else:
+        if info.context.user == comment.comment_writer:
             Comment.objects.get(uuid=uuid).delete()
             ok = len(Comment.objects.filter(uuid=uuid)) == 0
+
+        else:
+            ok = False
+
         return DeleteComment(ok=ok)
 
 

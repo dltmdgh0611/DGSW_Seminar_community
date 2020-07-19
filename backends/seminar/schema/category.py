@@ -23,6 +23,12 @@ class Tag(graphene.ObjectType):
     class Meta:
         pass
 
+class voteCount(graphene.ObjectType):
+    count = graphene.Int()
+
+    class Meta:
+        pass
+
 
 class PostOfRequestSeminarSchema(DjangoObjectType):
     get_tags = graphene.List(Tag)
@@ -33,7 +39,7 @@ class PostOfRequestSeminarSchema(DjangoObjectType):
 
 class PostOfRecruitSeminarSchema(DjangoObjectType):
     get_tags = graphene.List(Tag)
-
+    update_vote_count = graphene.List(voteCount)
     class Meta:
         model = PostOfRecruitSeminar
 

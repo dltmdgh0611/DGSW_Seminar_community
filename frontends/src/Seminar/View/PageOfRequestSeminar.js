@@ -6,9 +6,11 @@ import {Modal,Button,Form,Jumbotron,Container,Badge,Card} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import 'moment/locale/ko'
 import cookie from 'react-cookies';
+import RecommendButton from '../RecommendButton';
+import CommentControl from '../CommentControl'
 moment.locale('ko')
 
-const get_posts_of_request_seminar = `query{ postsOfRequestSeminar{ id, title, createdAt, getTags { name } link{ uuid, writer { username } } } }`;
+const get_posts_of_request_seminar = `query{ postsOfRequestSeminar{ id, title, createdAt, getTags { name } link{ uuid, writer { username } recommends{id} } } }`;
 
 
 class WriteForm extends Component {
@@ -163,9 +165,6 @@ class PostView extends Component {
         this.state = {
             me: cookie.load('me'),
             post: null,
-            comments:[],
-            recommend:[],
-            isRecommend:false,
             show_post_modal: null
         }
         this.commnet_form = React.createRef();      
@@ -200,56 +199,12 @@ class PostView extends Component {
                 "Authorization": cookie.load('token'),
             }
         }).then(result => {
-            this.setState({ post:result.data.data.links[0] });
+            this.setState({ 
+                link_uuid: link_uuid,
+                post:result.data.data.links[0],
+                is_mounted: true 
+            });
         });
-
-        axios({ //COMMENT
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `query{
-                    comment(refLinkUuid:"${link_uuid}"){
-                        uuid,
-                      commentDate,
-                      commentWriter{
-                        username
-                      }
-                      commentContent
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token'),
-            }
-        }).then(result => {
-            this.setState({ comments:result.data.data.comment });
-        });
-        this.setState({ link_uuid: link_uuid });
-        axios({
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `query{
-                    recommend(refLinkUuid:"${link_uuid}")
-                    {
-                      id,
-                      user {
-                        uuid
-                      }
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token'),
-            }
-        }).then(result => {
-            
-            this.setState({ recommend:result.data.data.recommend });
-            
-        });
-        
     }
 
     async doDeletePost(uuid){
@@ -314,171 +269,6 @@ class PostView extends Component {
         overflow: "hidden",
     }
 
-    async doCommentCreate(user){
-        const result = await axios({
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `mutation{
-                    createComment(
-                      content:"${this.commnet_form.current.value.split("\n")}",
-                      linkId:"${this.state.link_uuid}",
-                      userId:"${this.state.me.uuid}"
-                    ){
-                      ok
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token')
-            }
-        })
-
-        if(result.status === 200){
-            if(result.data.data.createComment.ok === true){
-                this.setState({'__dummy__': moment()});
-            }
-            else alert("create error")
-        }
-        else alert("lf")
-    }
-
-    deleteCommentValue(comment){
-        if(comment.commentWriter.username === this.state.me.username){
-            return(
-                <span style={{"cursor" : "pointer"}} onClick={ () => this.setState(this.deleteComment(comment))}>   삭제하기</span>
-            );
-        }
-    }
-
-    async deleteComment(comment){
-        const result = await axios({
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `mutation{
-                    deleteComment(uuid:"${comment.uuid}"){
-                      ok
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token')
-            }
-        })
-        if(result.status === 200){
-            if(result.data.data.deleteComment.ok === true){
-                this.setState({'__dummy__': moment()});
-            }
-            else alert("delete error")
-        }
-        else alert("lf")
-    }
-
-
-    async ADDRecommend(user, post){
-        const result = await axios({
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `mutation{
-                    createRecommend(
-                      userId:"${user}"
-                      linkId:"${post}"
-                    ){
-                     ok 
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token')
-            }
-        })
-        if(result.status === 200){
-            if(result.data.data.createRecommend.ok === true){
-                this.setState({'__dummy__': moment()});
-            }
-            else alert("delete error")
-        }
-        else alert("delete error")
-    }
-
-    async DELRecommend(user, post){
-        const result = await axios({
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `mutation{
-                    deleteRecommend(
-                      userId:"${user}"
-                      linkId:"${post}"
-                    ){
-                     ok 
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token')
-            }
-        })
-        if(result.status === 200){
-            if(result.data.data.deleteRecommend.ok === true){
-                this.setState({'__dummy__': moment()});
-            }
-            else alert("delete error")
-        }
-        else alert("delete error")
-    }
-
-    toggleRecommend(){     
-        const flagDiv={
-            float: "left",
-            borderRadius: "16px",
-            border: "1px solid #959595",
-            borderColor: "rgba(185,185,185,0.5)",
-            cursor: "pointer"
-        }
-        
-            this.state.recommend.map(recommend => {
-                if(recommend.user.uuid === this.state.me.uuid){
-                    this.state.isRecommend = true
-                }
-            })
-
-            if(this.state.isRecommend){
-                return (
-                        <div className="px-2 pb-1" style={flagDiv} onClick={() =>this.setState(this.DELRecommend(this.state.me.uuid, this.state.link_uuid))}>
-                            <svg className="bi bi-flag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
-                            <path fillRule="evenodd"
-                                d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916A.5.5 0 0 1 3.5 9V3a.5.5 0 0 1 .223-.416l.04-.026z"/>
-                            </svg>
-                            <a className="mx-2">{this.state.recommend.length}</a>
-                        </div>
-                );
-            }
-            else{
-                return (
-                        <div className="px-2 pb-1" style={flagDiv} onClick={() =>this.setState(this.ADDRecommend(this.state.me.uuid, this.state.link_uuid))}>
-                            <svg className="bi bi-flag" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
-                            <path fillRule="evenodd"
-                                d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916a.5.5 0 1 1-.515-.858C4.735 7.909 5.348 7.5 6.5 7.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126.187-.068.376-.153.593-.25.058-.027.117-.053.18-.08.456-.204 1-.43 1.64-.512V2.543c-.433.074-.83.234-1.234.414l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 3.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916a.5.5 0 0 1-.554-.832l.04-.026z"/>
-                            </svg>
-                            <a className="mx-2">{this.state.recommend.length}</a>
-                        </div>
-                );
-            } 
-        
-    }
-
-
     render() {        
         let post_view = <></>;
         if (this.state.post != null) {
@@ -513,40 +303,11 @@ class PostView extends Component {
                 />
 
                 <div className="align-items-center mb-5">
-                    {this.toggleRecommend()}
+                    <RecommendButton link_uuid={this.state.link_uuid}/>
                 </div>
                 
                 <hr/>                
-                <div className="input-group">
-                    <textarea ref={this.commnet_form} type="text" className="form-control" style={{"height":"50px"}} placeholder="Write your comment" onChange={this.handleChangeComment}></textarea>
-                    <div className="input-group-btn">
-                        <button className="btn bhi" style={{"border": "solid 1px #ccc", "height":"50px"}}
-                        onClick={ () =>this.setState(this.doCommentCreate())}>
-                            <svg className="bi bi-capslock-fill" width="24px" height="24px" viewBox="0 0 16 16" fill="currentColor"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fillRule="evenodd"
-                                    d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H11.5v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1H1.654C.78 9.5.326 8.455.924 7.816L7.27 1.047zM4.5 13.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>    
-                <hr/>
-                {this.state.comments.map(comment => (
-                    <div key={comment.uuid} className="my-4">
-                    <div className="px-3 py-2" style={{"display" : "inline-block", "borderRadius": "15px", "backgroundColor": "#F0F2F5"}}>
-                    <strong> {comment.commentWriter.username} </strong>
-                    {moment(Date.parse(comment.commentDate)).fromNow()}
-                    {this.deleteCommentValue(comment)}
-                    <br/>
-                    
-                    <div
-                        dangerouslySetInnerHTML = {{__html:
-                            comment.commentContent.replaceAll(",", "<br/>")
-                        }}
-                    />
-                    </div>
-                </div>
-                ))}
+                <CommentControl link_uuid={this.state.link_uuid}/>
             </div> 
             );
         }
@@ -573,6 +334,11 @@ class PageOfRequestSeminar extends Component {
       this.write_form = React.createRef();
     }
 
+    listFlag = {
+        position: "absolute",
+        right: "50px",
+        top: "35px"
+    }
     
     componentDidMount() {        
         axios({
@@ -629,6 +395,13 @@ class PageOfRequestSeminar extends Component {
                         <Card.Text as="h5">
                             {moment(Date.parse(post.createdAt)).fromNow()}-{post.link.writer.username}
                         </Card.Text>
+                        <div style={this.listFlag}>
+                            <svg className="bi bi-flag-fill d-inline" width="24px" height="24px" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
+                                <path fill-rule="evenodd" d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916A.5.5 0 0 1 3.5 9V3a.5.5 0 0 1 .223-.416l.04-.026z"/>
+                            </svg>
+                            <h5 className="d-inline mt-1"> {post.link.recommends.length}</h5>
+                        </div>
                     </Card>
                 ))}
                 </Container>

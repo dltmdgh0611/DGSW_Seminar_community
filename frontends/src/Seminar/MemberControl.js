@@ -208,6 +208,7 @@ class MemberControl extends Component {
 
     doRefresh() {
         const refreshToken = cookie.load('refreshToken')
+        console.log(refreshToken)
         const Q = `mutation {
             refreshToken(refreshToken: "${refreshToken}") {
               token
@@ -223,6 +224,7 @@ class MemberControl extends Component {
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
+                "Authorization": cookie.load('token')   
             }
         }).then(result => {
             cookie.save('token', 'JWT ' + result.data.data.refreshToken.token, {maxAge: 3600});
