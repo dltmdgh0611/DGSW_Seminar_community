@@ -6,11 +6,13 @@ from seminar.models import PostOfFreeSeminar, PostOfRecruitSeminar, PostOfReques
 class SearchOfCategory(graphene.ObjectType):
     title = graphene.String()
     namespace = graphene.String()
+    username = graphene.String()
     uuid = graphene.UUID()
     id = graphene.Int()
     created_at = graphene.DateTime()
     tag_kind = graphene.String()
     content = graphene.String()
+    vote_count = graphene.Int()
 
     class Meta:
         model = Link
@@ -45,6 +47,8 @@ class SearchOfCategoryQuery(graphene.ObjectType):
                         uuid=post.link.uuid,
                         namespace=post.link.namespace,
                         id=post.id,
+                        username=post.link.writer,
+                        vote_count=post.link
                     ))
 
         for post in PostOfRequestSeminar.objects.filter(title__contains=sentence):
@@ -57,7 +61,8 @@ class SearchOfCategoryQuery(graphene.ObjectType):
                         uuid=post.link.uuid,
                         namespace=post.link.namespace,
                         id=post.id,
-                        tag_kind=post.tag_kind
+                        tag_kind=post.tag_kind,
+                        username=post.link.writer
                     ))
 
         for post in PostOfRecruitSeminar.objects.filter(title__contains=sentence):
@@ -70,7 +75,8 @@ class SearchOfCategoryQuery(graphene.ObjectType):
                         uuid=post.link.uuid,
                         namespace=post.link.namespace,
                         id=post.id,
-                        tag_kind=post.tag_kind
+                        tag_kind=post.tag_kind,
+                        username=post.link.writer
                     ))
 
         return result

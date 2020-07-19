@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Navigator from '../Navigator'
 import axios from 'axios';
 import moment from 'moment';
-import {Modal,Button,Form,Jumbotron,Container,Card} from 'react-bootstrap'
+import {Modal,Button,Form,Jumbotron,Container,Card, ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import 'moment/locale/ko'
 import cookie from 'react-cookies';
@@ -184,7 +184,6 @@ class PostView extends Component {
                         createdAt
                       }
                     }
-                    
                   }`
             },
             headers: {
@@ -337,8 +336,8 @@ class PageOfFreeSeminar extends Component {
         }).then(result => {
             
             this.setState({
-                 posts:result.data.data.postsOfFreeSeminar,
-                });
+                 posts:result.data.data.postsOfFreeSeminar
+            });
         });
     }
     
@@ -353,6 +352,12 @@ class PageOfFreeSeminar extends Component {
         top: "35px"
     }
 
+    comp(a,b){
+        return b.link.recommends.length - a.link.recommends.length
+    }
+
+
+
     render() {
         
         return (
@@ -364,14 +369,20 @@ class PageOfFreeSeminar extends Component {
                         <p className="lead">학교에 관한 자유로운 이야기를 들려주세요</p>
                     </Container>
                 </Jumbotron>
+                
                 <Container className="p-3">
+                <ToggleButtonGroup className="p-3" type="radio" name="options"  defaultValue={1}>
+                    <ToggleButton variant="secondary" value={1}>최신순 보기</ToggleButton>
+                    <ToggleButton variant="secondary" value={2}>인기순 보기</ToggleButton>
+                </ToggleButtonGroup>
                 <Card className="m-3 p-4 shadow" style={{ "cursor": "pointer" }} onClick={() =>this.write_form.current.Show()}>
                     <Card.Text as="h5">
                         글을 작성하시려면 클릭해주세요
                     </Card.Text>
                 </Card>
                 <WriteForm Show={this.state.show_post_modal} ref={this.write_form}/>
-                {this.state.posts.map(post => (
+                
+                {this.state.posts.sort(this.comp).map(post => (
                     
                     <Card key={post.id} className="m-3 p-3 shadow-sm" style={{ "cursor": "pointer" }} 
                     onClick={(e) => this.GoPost(e)}

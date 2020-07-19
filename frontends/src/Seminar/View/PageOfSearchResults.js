@@ -40,7 +40,15 @@ class PageOfSearchResults extends Component {
                 url: "http://localhost:8000/api",
                 data: {
                     
-                    query: `query{ search(keyword:"${keyword}"){ uuid, id, title, createdAt, tagKind, namespace }}`
+                    query: `query{
+                        search(keyword:"${keyword}"){
+                          title,
+                          createdAt,
+                          uuid,
+                          namespace,
+                          username
+                        }
+                      }`
                 },
                 headers: {
                     "Access-Control-Allow-Origin": "*",
@@ -63,6 +71,39 @@ class PageOfSearchResults extends Component {
         this.updateSerachResult();
     }
 
+    GoPost(e, post) {
+        e.preventDefault();
+        if(post.namespace === "PostOfFreeSeminar"){
+            this.props.history.push('/postview/free_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        }
+        else if(post.namespace === "PostOfRequestSeminar"){
+            this.props.history.push('/postview/request_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        }
+        else if(post.namespace === "PostOfRecruitSeminar"){
+            this.props.history.push('/postview/recruit_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        }
+        
+    }
+
+    ViewNamespace(post){
+        console.log(post.namespace)
+        if(post.namespace === "PostOfFreeSeminar"){
+            return(
+                <>자유게시판</>
+            );
+        }
+        else if(post.namespace === "PostOfRequestSeminar"){
+            return(
+                <>강의요청</>
+            );
+        }
+        else if(post.namespace === "PostOfRecruitSeminar"){
+            return(
+                <>강의목록</>
+            );
+        }
+    }
+
     render() {
         
         return (
@@ -71,13 +112,13 @@ class PageOfSearchResults extends Component {
                 <Container className="p-3">
 
                 {this.state.search_result.map(post => (
-                    <Card className="m-3 p-3 shadow-sm" style={{ cursor: "poitner" }} key={post.id}>
-                        <Card.Title as="h4" style={{ cursor: "poitner" }}>
+                    <Card className="m-3 p-3 shadow-sm" style={{ cursor: "pointer" }} key={post.id}>
+                        <Card.Title as="h4" style={{ "cursor": "pointer" }} onClick={(e) => this.GoPost(e, post)} value={post.uuid}>
                             {post.title}
                             {render_tags(post)}
                         </Card.Title>
                         <Card.Text as="h5">
-                            {moment(Date.parse(post.createdAt)).fromNow()} {post.writer}
+                            {moment(Date.parse(post.createdAt)).fromNow()} - {post.username} - {this.ViewNamespace(post)}
                         </Card.Text>
                     </Card>
                 ))}

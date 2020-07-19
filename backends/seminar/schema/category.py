@@ -39,7 +39,6 @@ class PostOfRequestSeminarSchema(DjangoObjectType):
 
 class PostOfRecruitSeminarSchema(DjangoObjectType):
     get_tags = graphene.List(Tag)
-    update_vote_count = graphene.List(voteCount)
     class Meta:
         model = PostOfRecruitSeminar
 
