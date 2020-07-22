@@ -208,7 +208,6 @@ class MemberControl extends Component {
 
     doRefresh() {
         const refreshToken = cookie.load('refreshToken')
-        console.log(refreshToken)
         const Q = `mutation {
             refreshToken(refreshToken: "${refreshToken}") {
               token

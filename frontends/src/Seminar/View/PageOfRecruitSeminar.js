@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Navigator from '../Navigator'
 import axios from 'axios';
 import moment from 'moment';
-import {Modal,Button,Form,Jumbotron,Container,Badge,Card} from 'react-bootstrap'
+import {Modal,Button,Form,Jumbotron,Container,Badge,Card, ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize';
 import 'moment/locale/ko'
 import cookie from 'react-cookies';
@@ -408,6 +408,7 @@ class PostView extends Component {
 class PageOfRecruitSeminar extends Component {  
     constructor(props) {
       super(props);
+      this.sortbytime = React.createRef();
       this.state = {
         posts:[],
        
@@ -426,6 +427,10 @@ class PageOfRecruitSeminar extends Component {
     }
     
     componentDidMount() {        
+        this.parseRecruitdata()
+    }
+
+    parseRecruitdata() {
         axios({
             method: "POST",
             url: "http://localhost:8000/api",
@@ -448,6 +453,21 @@ class PageOfRecruitSeminar extends Component {
     }
 
 
+    compbyrecommend(a,b){
+        return b.link.recommends.length - a.link.recommends.length
+    }
+
+    ToggleSort(value){
+        console.log(123)
+        if(value === "byrecommend") {
+            this.setState({posts: this.state.posts.sort(this.compbyrecommend)})
+        }
+        else {
+            this.parseRecruitdata()
+        }
+
+    }
+
     render() {
 
         return (
@@ -460,6 +480,10 @@ class PageOfRecruitSeminar extends Component {
                     </Container>
                 </Jumbotron>
                 <Container className="p-3">
+                <ToggleButtonGroup ref={this.sortbytime} className="p-3" type="radio" name="options"  defaultValue="bytime" onChange={(e) => this.ToggleSort(e)}>
+                    <ToggleButton variant="secondary"  value="bytime">최신순 보기</ToggleButton>
+                    <ToggleButton variant="secondary" value="byrecommend">인기순 보기</ToggleButton>
+                </ToggleButtonGroup>
                 <Card className="m-3 p-4 shadow" style={{ "cursor": "pointer" }} onClick={() =>this.write_form.current.Show()}>
                     <Card.Text as="h5">
                         글을 작성하시려면 클릭해주세요

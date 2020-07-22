@@ -314,16 +314,25 @@ class PostView extends Component {
 class PageOfFreeSeminar extends Component {  
     constructor(props) {
         super(props);
+        this.sortbytime = React.createRef();
         this.state = {
             posts:[],
             recommendcount: 0,
-            cts_var : 56
+            cts_var : 56,
+            sortToggle : false,
+
         }
-       this.write_form = React.createRef();
+        this.write_form = React.createRef();
+
+        
     }
 
     
     componentDidMount() {               
+        this.parseFreedata()   
+    }
+
+    parseFreedata(){
         axios({
             method: "POST",
             url: "http://localhost:8000/api",
@@ -352,11 +361,21 @@ class PageOfFreeSeminar extends Component {
         top: "35px"
     }
 
-    comp(a,b){
+
+    compbyrecommend(a,b){
         return b.link.recommends.length - a.link.recommends.length
     }
 
+    ToggleSort(value){
+        console.log(123)
+        if(value === "byrecommend") {
+            this.setState({posts: this.state.posts.sort(this.compbyrecommend)})
+        }
+        else {
+            this.parseFreedata()
+        }
 
+    }
 
     render() {
         
@@ -371,9 +390,9 @@ class PageOfFreeSeminar extends Component {
                 </Jumbotron>
                 
                 <Container className="p-3">
-                <ToggleButtonGroup className="p-3" type="radio" name="options"  defaultValue={1}>
-                    <ToggleButton variant="secondary" value={1}>최신순 보기</ToggleButton>
-                    <ToggleButton variant="secondary" value={2}>인기순 보기</ToggleButton>
+                <ToggleButtonGroup ref={this.sortbytime} className="p-3" type="radio" name="options"  defaultValue="bytime" onChange={(e) => this.ToggleSort(e)}>
+                    <ToggleButton variant="secondary"  value="bytime">최신순 보기</ToggleButton>
+                    <ToggleButton variant="secondary" value="byrecommend">인기순 보기</ToggleButton>
                 </ToggleButtonGroup>
                 <Card className="m-3 p-4 shadow" style={{ "cursor": "pointer" }} onClick={() =>this.write_form.current.Show()}>
                     <Card.Text as="h5">
@@ -382,7 +401,7 @@ class PageOfFreeSeminar extends Component {
                 </Card>
                 <WriteForm Show={this.state.show_post_modal} ref={this.write_form}/>
                 
-                {this.state.posts.sort(this.comp).map(post => (
+                {this.state.posts.map(post => (
                     
                     <Card key={post.id} className="m-3 p-3 shadow-sm" style={{ "cursor": "pointer" }} 
                     onClick={(e) => this.GoPost(e)}
