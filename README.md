@@ -14,4 +14,4 @@
  * GraphQL(Graphene)
  
 # 기능 
- 
+ ![11](https://user-images.githubusercontent.com/38284097/88253595-72967580-cced-11ea-8e75-7fa1331f1aba.PNG)
