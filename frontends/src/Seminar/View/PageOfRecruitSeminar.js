@@ -51,6 +51,12 @@ class WriteForm extends Component {
             this.state.Content = this.props.Content
         }
         
+
+
+        this.minpeoplecount = React.createRef();
+        this.maxpeoplecount = React.createRef();
+        this.timesofcount = React.createRef();
+
         this.input_title = React.createRef();
         this.input_content = React.createRef();
         this.input_tag = React.createRef();
@@ -82,10 +88,13 @@ class WriteForm extends Component {
                 data: {
                     query: `mutation{
                         updatePost(
-                          uuid:"${arg.uuid}"
-                          title:"${arg.title}"
-                          tagkind:"${arg.tag}"
-                          content:"${arg.content.split("\n")}"
+                            uuid:"${arg.uuid}"
+                            title:"${arg.title}"
+                            tagkind:"${arg.tag}"
+                            content:"${arg.content.split("\n")}"
+                            minPeopleCount:${arg.minpeoplecount}
+                            maxPeopleCount:${arg.maxpeoplecount}
+                            timesOfClass:${arg.timesofclass}
                         ){
                           ok
                         }
@@ -114,6 +123,9 @@ class WriteForm extends Component {
                             content:"${arg.content.split("\n")}",
                             tagKind:"${arg.tag}"
                             KindOf:"PostOfRecruitSeminar"
+                            minPeopleCount:${arg.minpeoplecount}
+                          	maxPeopleCount:${arg.maxpeoplecount}
+                          	timesOfClass:${arg.timesofclass}
                         )
                         {
                             ok
@@ -149,7 +161,7 @@ class WriteForm extends Component {
             >
             <Modal.Header closeButton onClick={() => this.Hide()}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    강의 요청글 {this.props.Edit ? "수정하기" : "작성하기"}
+                    강의 모집글 작성 {this.props.Edit ? "수정하기" : "작성하기"}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -167,7 +179,7 @@ class WriteForm extends Component {
                         <div className="d-inline-flex">
                             <h4 className="mb-3"> 차시 수 : </h4>
                             <div className="inline mx-3 mb-4">
-                                <input type="text" style={{"width" : "50px"}} name="class_count"></input> 차시
+                                <input type="text" style={{"width" : "50px"}} name="class_count" ref={this.timesofcount}></input> 차시
                             </div>
                         </div>
                         <br/>
@@ -190,16 +202,16 @@ class WriteForm extends Component {
                         <div className="d-inline-flex">
                             <h4 className="mb-3"> 최소 인원 ~ 최대 인원 : </h4>
                             <div className="inline mb-4 mx-3">
-                                <input type="text" style={{"width" : "50px"}} name="min_people_count"></input> 명
-                                ~ <input type="text" style={{"width" : "50px"}} name="max_people_count"></input> 명
+                                <input type="text" style={{"width" : "50px"}} name="min_people_count" ref={this.minpeoplecount}></input> 명
+                                ~ <input type="text" style={{"width" : "50px"}} name="max_people_count" ref={this.maxpeoplecount}></input> 명
                             </div>
                         </div>
                         
                     </div>
-                    <input style={this.tts} type="text" name="title" placeholder="TITLE" ref={this.input_title} defaultValue={this.state.Title}></input>
+                    <input style={this.tts} type="text" name="title" placeholder="TITLE" ref={this.input_title} defaultValue={this.state.Title.replaceAll(",", "\n")}></input>
                     <br/>
                     <hr/>
-                    <TextareaAutosize style={this.cts} placeholder="CONTENT" ref={this.input_content} defaultValue={this.state.Content.replaceAll(",", "\n")}/>
+                    <TextareaAutosize style={this.cts} placeholder="CONTENT" ref={this.input_content} defaultValue={this.state.Content}/>
                     <br/>
                 </Form>
             </Modal.Body>
@@ -211,7 +223,10 @@ class WriteForm extends Component {
                     uuid: new URLSearchParams(window.location.search).get('v'), 
                     grade1: this.grade1.current.checked, 
                     grade2: this.grade2.current.checked, 
-                    grade3: this.grade3.current.checked})}>작성하기</Button>
+                    grade3: this.grade3.current.checked,
+                    minpeoplecount: this.minpeoplecount.current.value,
+                    maxpeoplecount: this.maxpeoplecount.current.value,
+                    timesofclass: this.timesofcount.current.value, })}>작성하기</Button>
             </Modal.Footer>
             </Modal>
         );

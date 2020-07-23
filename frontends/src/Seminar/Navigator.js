@@ -46,7 +46,7 @@ class Navigator extends Component {
                         <Nav.Link href="/free_seminar">자유 게시판</Nav.Link>
                     </Nav.Item>
                     <Nav.Item className="mx-2">
-                        <Nav.Link href="" disabled>강의 수요현황 </Nav.Link>
+                        <Nav.Link href="/Calendar">강의 수요현황 </Nav.Link>
                     </Nav.Item>
                 </Nav>
                 <Nav className="ml-auto d-flex px-5">

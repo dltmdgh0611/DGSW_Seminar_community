@@ -13,12 +13,16 @@ class CreatePost(graphene.Mutation):
         title = graphene.String(required=True)
         content = graphene.String(required=True)
         tagKind = graphene.String(required=False)
+        min_people_count = graphene.Int(required=False)
+        max_people_count = graphene.Int(required=False)
+        times_of_class = graphene.Int(required=False)
         KindOf = graphene.String(required=True)
 
     ok = graphene.Boolean()
 
     @login_required
-    def mutate(self, info: ResolveInfo, title, content, KindOf, tagKind=None):
+
+    def mutate(self, info: ResolveInfo, title, content, KindOf, tagKind=None, min_people_count=None, max_people_count=None, times_of_class=None):
         link = Link()
         link.uuid = uuid4()
         link.writer = info.context.user
@@ -42,9 +46,9 @@ class CreatePost(graphene.Mutation):
                 title=title,
                 content=content,
                 tag_kind=tagKind,
-                min_people_count=0,
-                max_people_count=0,
-                times_of_class=0
+                min_people_count=min_people_count,
+                max_people_count=max_people_count,
+                times_of_class=times_of_class
             )
 
         link.namespace = post.__class__.__name__
@@ -59,11 +63,14 @@ class UpdatePost(graphene.Mutation):
         title = graphene.String(required=True)
         content = graphene.String(required=True)
         tagkind = graphene.String(required=False)
+        min_people_count = graphene.Int(required=False)
+        max_people_count = graphene.Int(required=False)
+        times_of_class = graphene.Int(required=False)
 
     ok = graphene.Boolean()
 
     @login_required
-    def mutate(self, info: ResolveInfo, uuid, title, content, tagkind=None):
+    def mutate(self, info: ResolveInfo, uuid, title, content, tagkind=None, min_people_count=None, max_people_count=None, times_of_class=None):
         link = Link.objects.get(uuid=uuid)
         post = None
         if link.namespace == "PostOfFreeSeminar":
@@ -78,6 +85,9 @@ class UpdatePost(graphene.Mutation):
         post.content = content
         post.edited_at = datetime.now()
         post.tag_kind = tagkind
+        post.min_people_count = min_people_count
+        post.max_people_count = max_people_count
+        post.times_of_class = times_of_class
 
         post.save()
 
