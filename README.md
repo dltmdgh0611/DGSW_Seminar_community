@@ -15,5 +15,17 @@
  
 # 기능 
 
-### 로그인 화면
- ![11](https://user-images.githubusercontent.com/38284097/88253595-72967580-cced-11ea-8e75-7fa1331f1aba.PNG)
+### 🙌 로그인 화면
+ ![11](https://user-images.githubusercontent.com/38284097/88253595-72967580-cced-11ea-8e75-7fa1331f1aba.PNG)   
+ 
+### 🙌 회원가입
+![22](https://user-images.githubusercontent.com/38284097/88253596-732f0c00-cced-11ea-8a06-578122501d6b.PNG)
+
+### 📃 강의 목록 (강의를 열어 수강생 모집)
+![33](https://user-images.githubusercontent.com/38284097/88253597-732f0c00-cced-11ea-9ea3-1544066297a2.PNG)
+
+### 📃 강의 요청 (자신이 듣고 싶은 강의 요청)
+![44](https://user-images.githubusercontent.com/38284097/88253598-73c7a280-cced-11ea-8f95-dc1882bd71f7.PNG)
+
+### 📃 자유게시판 (학교에 관한 자유로운 이야기 작성)
+![55](https://user-images.githubusercontent.com/38284097/88253588-70341b80-cced-11ea-9f29-2fb74152cdf9.PNG)
