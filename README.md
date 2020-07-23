@@ -37,7 +37,7 @@
 ![77](https://user-images.githubusercontent.com/38284097/88253591-71654880-cced-11ea-8413-2c60a3e28aac.PNG)    
 
 ### 💬 게시글 / 댓글 / 추천
-![99](https://user-images.githubusercontent.com/38284097/88253594-71fddf00-cced-11ea-862e-ad966f168f6b.PNG)    
+![88](https://user-images.githubusercontent.com/38284097/88253594-71fddf00-cced-11ea-862e-ad966f168f6b.PNG)    
 
 
 
