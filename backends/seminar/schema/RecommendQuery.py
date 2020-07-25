@@ -18,6 +18,7 @@ class RecommendInfo(graphene.ObjectType):
 
 class RecommendQuery(graphene.ObjectType):
     recommend_info = graphene.Field(RecommendInfo, ref_link_uuid=graphene.UUID())
+    person_info = graphene.List(RecommendSchema, ref_link_uuid=graphene.UUID())
 
     @login_required
     def resolve_recommend_info(self, info, ref_link_uuid):
@@ -27,3 +28,11 @@ class RecommendQuery(graphene.ObjectType):
             count=Recommend.objects.filter(ref_link=link).count(),
             me_too=Recommend.objects.filter(ref_link=link, user=info.context.user.uuid).exists()
         )
+
+    @login_required
+    def resolve_person_info(self, info, ref_link_uuid):
+        link = Link.objects.get(uuid=ref_link_uuid)
+
+        return Recommend.objects.filter(ref_link=link)
+
+

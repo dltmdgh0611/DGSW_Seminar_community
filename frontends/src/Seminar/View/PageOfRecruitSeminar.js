@@ -208,7 +208,7 @@ class WriteForm extends Component {
                         </div>
                         
                     </div>
-                    <input style={this.tts} type="text" name="title" placeholder="TITLE" ref={this.input_title} defaultValue={this.state.Title.replaceAll(",", "\n")}></input>
+                    <input style={this.tts} type="text" name="title" placeholder="TITLE" ref={this.input_title} defaultValue={this.state.Title.replace(/,/gi, "\n")}></input>
                     <br/>
                     <hr/>
                     <TextareaAutosize style={this.cts} placeholder="CONTENT" ref={this.input_content} defaultValue={this.state.Content}/>
@@ -302,29 +302,7 @@ class PostView extends Component {
             this.setState({ comments:result.data.data.comment });
         });
         this.setState({ link_uuid: link_uuid });
-        axios({
-            method: "POST",
-            url: "http://localhost:8000/api",
-            data: {
-                query: `query{
-                    recommend(refLinkUuid:"${link_uuid}")
-                    {
-                      id,
-                      user {
-                        uuid
-                      }
-                    }
-                  }`
-            },
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Authorization": cookie.load('token'),
-            }
-        }).then(result => {
-            
-            this.setState({ recommend:result.data.data.recommend });
-            
-        });
+        
         
     }
 
@@ -400,7 +378,7 @@ class PostView extends Component {
                 
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray" 
                     dangerouslySetInnerHTML = {{__html:
-                       this.state.post.postofrecruitseminar.content.replaceAll(",", "<br/>")
+                       this.state.post.postofrecruitseminar.content.replace(/,/gi, "<br/>")
                     }}
                 />
                 <div className="align-items-center mb-5">
@@ -497,7 +475,7 @@ class PageOfRecruitSeminar extends Component {
                 <Container className="p-3">
                 <ToggleButtonGroup ref={this.sortbytime} className="p-3" type="radio" name="options"  defaultValue="bytime" onChange={(e) => this.ToggleSort(e)}>
                     <ToggleButton variant="secondary"  value="bytime">최신순 보기</ToggleButton>
-                    <ToggleButton variant="secondary" value="byrecommend">인기순 보기</ToggleButton>
+                    <ToggleButton variant="secondary" value="byrecommend">신청자순 보기</ToggleButton>
                 </ToggleButtonGroup>
                 <Card className="m-3 p-4 shadow" style={{ "cursor": "pointer" }} onClick={() =>this.write_form.current.Show()}>
                     <Card.Text as="h5">
@@ -521,9 +499,8 @@ class PageOfRecruitSeminar extends Component {
                             {moment(Date.parse(post.createdAt)).fromNow()}-{post.link.writer.username}
                         </Card.Text>
                         <div style={this.listFlag}>
-                            <svg className="bi bi-flag-fill d-inline" width="24px" height="24px" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M3.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
-                                <path fill-rule="evenodd" d="M3.762 2.558C4.735 1.909 5.348 1.5 6.5 1.5c.653 0 1.139.325 1.495.562l.032.022c.391.26.646.416.973.416.168 0 .356-.042.587-.126a8.89 8.89 0 0 0 .593-.25c.058-.027.117-.053.18-.08.57-.255 1.278-.544 2.14-.544a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5c-.638 0-1.18.21-1.734.457l-.159.07c-.22.1-.453.205-.678.287A2.719 2.719 0 0 1 9 9.5c-.653 0-1.139-.325-1.495-.562l-.032-.022c-.391-.26-.646-.416-.973-.416-.833 0-1.218.246-2.223.916A.5.5 0 0 1 3.5 9V3a.5.5 0 0 1 .223-.416l.04-.026z"/>
+                            <svg width="1em" height="1em" viewBox="0 0 16 16"  width="24px" height="24px" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                             </svg>
                             <h5 className="d-inline mt-1"> {post.link.recommends.length}</h5>
                         </div>

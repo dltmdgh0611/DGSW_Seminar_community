@@ -141,7 +141,7 @@ class WriteForm extends Component {
                     <input style={this.tts} type="text" name="title" placeholder="TITLE" ref={this.input_title} defaultValue={this.state.Title}></input>
                     <br/>
                     <hr/>
-                    <TextareaAutosize style={this.cts} placeholder="CONTENT" ref={this.input_content} defaultValue={this.state.Content.replaceAll(",", "\n")}/>
+                    <TextareaAutosize style={this.cts} placeholder="CONTENT" ref={this.input_content} defaultValue={this.state.Content.replace(/,/gi, "\n")}/>
                     <br/>
                 </Form>
             </Modal.Body>
@@ -290,7 +290,7 @@ class PostView extends Component {
                 
                 <div className="media-body pb-5 pt-5 lh-125 border-top border-gray" 
                     dangerouslySetInnerHTML = {{__html:
-                       this.state.post.postoffreeseminar.content.replaceAll(",", "<br/>")
+                       this.state.post.postoffreeseminar.content.replace(/,/gi, "<br/>")
                     }}
                 />
                 <div className="align-items-center mb-5">
