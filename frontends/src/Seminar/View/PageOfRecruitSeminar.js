@@ -404,7 +404,7 @@ class PageOfRecruitSeminar extends Component {
       this.sortbytime = React.createRef();
       this.state = {
         posts:[],
-       
+        me: cookie.load('me'),
         gradeone:false,
         gradetwo:false,
         gradethree:false
@@ -442,7 +442,13 @@ class PageOfRecruitSeminar extends Component {
 
     GoPost(e) {
         e.preventDefault();
-        this.props.history.push('/postview/recruit_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        if(this.state.me === undefined){
+            alert("로그인 후 이용바랍니다.")
+        }
+        else {
+            console.log(this.state.me)
+            this.props.history.push('/postview/free_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        }
     }
 
 

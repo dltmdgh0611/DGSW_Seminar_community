@@ -320,7 +320,7 @@ class PageOfFreeSeminar extends Component {
             recommendcount: 0,
             cts_var : 56,
             sortToggle : false,
-
+            me: cookie.load('me')
         }
         this.write_form = React.createRef();
 
@@ -329,7 +329,7 @@ class PageOfFreeSeminar extends Component {
 
     
     componentDidMount() {               
-        this.parseFreedata()   
+        this.parseFreedata() 
     }
 
     parseFreedata(){
@@ -352,7 +352,14 @@ class PageOfFreeSeminar extends Component {
     
     GoPost(e) {
         e.preventDefault();
-        this.props.history.push('/postview/free_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        if(this.state.me === undefined){
+            alert("로그인 후 이용바랍니다.")
+        }
+        else {
+            console.log(this.state.me)
+            this.props.history.push('/postview/free_seminar/?v='+ e.currentTarget.getAttribute('value'));
+        }
+        
     }
 
     listFlag = {
