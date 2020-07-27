@@ -4,6 +4,7 @@ import axios from 'axios';
 import 'moment/locale/ko'
 import cookie from 'react-cookies';
 
+
 class PersonForm extends Component{
 
     constructor(props) {
@@ -74,7 +75,9 @@ class PersonForm extends Component{
                         ))}
                         
                     </Modal.Body>
-                    <Modal.Footer></Modal.Footer>
+                    <Modal.Footer>
+                        <Button onClick={() => this.Hide()}>확인</Button>
+                    </Modal.Footer>
                 
                 </Modal>
             
@@ -97,9 +100,11 @@ class RecommendButton extends Component {
             recommendInfo: undefined,
             personInfo: undefined,
             is_mounted: false,
+            WShow:false,
             __dummy__: 0,
         }
         this.person_form = React.createRef();
+        this.warning_form = React.createRef();
     }
 
     async getKindof() {
@@ -199,6 +204,35 @@ class RecommendButton extends Component {
         }
     }
 
+    viewWarning = () => {
+        return(
+            <Modal
+                show={this.state.WShow}
+                onHide = {()=>{}}
+                size="md"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                >
+                    <Modal.Header closeButton onClick={() => this.setState({WShow: false})}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            신청자 등록
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <>
+                        <h3>신청자 등록을 하시겠습니까?</h3><br/>
+                        <h6>등록 하면 수업이 열릴경우 필참해야합니다.</h6>
+                        </>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={async () => this.setState({recommendInfo: await this.ToggleRecommend(), WShow: false})}>동의하기</Button>
+                        <Button onClick={() => this.setState({WShow: false})}>취소</Button>
+                    </Modal.Footer>
+                
+                </Modal>
+        )
+    }
+
     render() {    
         if(this.state.is_mounted){
             if(this.state.Kindof.namespace === "PostOfRecruitSeminar"){
@@ -214,6 +248,7 @@ class RecommendButton extends Component {
                             <a className="mx-2">{this.state.recommendInfo.count}</a>
                         </div>
                         <PersonForm Show={this.state.show_post_modal} ref={this.person_form} link_uuid={this.props.link_uuid}/>
+                        
                         </>
                     );
                     
@@ -222,13 +257,14 @@ class RecommendButton extends Component {
                     return (
                         <>
                         {this.viewpersoninfo()}
-                        <div className="px-2 pb-1" style={this.flag_css} onClick={async () => {this.setState({recommendInfo: await this.ToggleRecommend()})}}>
+                        <div className="px-2 pb-1" style={this.flag_css} onClick={async () => this.setState({WShow: true})}>
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M13 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM3.022 13h9.956a.274.274 0 0 0 .014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 0 0 .022.004zm9.974.056v-.002.002zM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                             </svg>
                             <a className="mx-2">{this.state.recommendInfo.count}</a>
                         </div>
                         <PersonForm Show={this.state.show_post_modal} ref={this.person_form} link_uuid={this.props.link_uuid}/>
+                        {this.viewWarning()}
                         </>
                     );
                 }

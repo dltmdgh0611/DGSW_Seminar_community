@@ -126,9 +126,7 @@ class CommentControl extends Component {
     render(){
         console.log(this.state)
         return(
-            
             <>
-            
             <div className="input-group">
                 <textarea id="commentinput" ref={this.commnet_form} type="text" className="form-control" style={{"height":"50px"}} placeholder="Write your comment" ></textarea>
                 <div className="input-group-btn">
