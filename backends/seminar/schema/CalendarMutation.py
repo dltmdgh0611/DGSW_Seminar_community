@@ -12,7 +12,7 @@ class CreateCalendar(graphene.Mutation):
 
     def mutate(self, info, title, startplan, endplan):
         cal = Calendar(
-            Plantitle=title,
+            title=title,
             PlanStart=startplan,
             PlanEnd=endplan,
             plan_id=uuid4()
