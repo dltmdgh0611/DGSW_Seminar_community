@@ -447,7 +447,7 @@ class PageOfRecruitSeminar extends Component {
         }
         else {
             console.log(this.state.me)
-            this.props.history.push('/postview/free_seminar/?v='+ e.currentTarget.getAttribute('value'));
+            this.props.history.push('/postview/recruit_seminar/?v='+ e.currentTarget.getAttribute('value'));
         }
     }
 

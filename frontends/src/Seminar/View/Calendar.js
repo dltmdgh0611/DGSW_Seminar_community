@@ -4,6 +4,13 @@ import PlanCalendar from '../View/PlanCalendar'
 import { Container, Jumbotron } from 'react-bootstrap';
 
 class Calendar extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    }
+  }
+  
   render() {
     return (
         <div>

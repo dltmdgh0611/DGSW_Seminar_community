@@ -46,7 +46,8 @@ class PageOfSearchResults extends Component {
                           createdAt,
                           uuid,
                           namespace,
-                          username
+                          username,
+                          tagKind
                         }
                       }`
                 },

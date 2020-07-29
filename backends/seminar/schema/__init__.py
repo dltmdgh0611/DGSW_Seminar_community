@@ -10,14 +10,16 @@ from .account import AccountMutations
 from .category import PostQuery
 from .experimental import PostMutations
 from .search_of_category import SearchOfCategoryQuery
+from .CalendarQuery import CalendarQuery
+from .CalendarMutation import CalendarMutations
 
 
-class MasterQuery(UserQuery, MeQuery, PostQuery, SearchOfCategoryQuery, CommentQuery, RecommendQuery,
+class MasterQuery(UserQuery, MeQuery, PostQuery, SearchOfCategoryQuery, CommentQuery, RecommendQuery, CalendarQuery,
                   graphene.ObjectType):
     pass
 
 
-class MasterMutation(PostMutations, CommentMutations, RecommendMutations, AccountMutations, Refresh,
+class MasterMutation(PostMutations, CommentMutations, RecommendMutations, AccountMutations, Refresh, CalendarMutations,
                      graphene.ObjectType):
     pass
 

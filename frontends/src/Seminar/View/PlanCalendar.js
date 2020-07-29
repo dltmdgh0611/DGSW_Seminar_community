@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Component } from 'react'
 import moment from 'moment'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 const now = new Date()
 
 const myEventsList = [
@@ -164,19 +165,49 @@ const myEventsList = [
     end: new Date( 2020, 3, 14, 20, 0, 0),
   },
 ]
-
 const localizer = momentLocalizer(moment)
 
-const PlanCalendar = props => (
-    <div>
-      <Calendar
-      localizer={localizer}
-        events={myEventsList}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 700}}
-      />
-    </div>
-  )
+class PlanCalendar extends Component{
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      myEventsList
+    }
+  }
+
+  handleSelect = ({ start, end }) => {
+    const title = window.prompt('New Event name')
+    console.log(start, end)
+    if (title)
+      this.setState({
+        myEventsList: [
+          ...this.state.myEventsList,
+          {
+            start,
+            end,
+            title,
+          },
+        ],
+      })
+  }
+     
+
+  render(){
+    return(
+      <div>
+        <Calendar
+        selectable
+          localizer={localizer}
+          events={this.state.myEventsList}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 700}}
+          onSelectEvent={event => alert(event.title)}
+          onSelectSlot={this.handleSelect}
+        />
+      </div>
+    );
+  }
+}
 export default PlanCalendar
