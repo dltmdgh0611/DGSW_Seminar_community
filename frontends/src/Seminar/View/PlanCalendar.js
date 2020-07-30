@@ -1,32 +1,29 @@
-import React, { Component } from 'react'
-import moment from 'moment'
+import React, { Component } from 'react';
+import moment from 'moment';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+const now = new Date();
 
-const now = new Date()
+const myEventsList = [];
+const localizer = momentLocalizer(moment);
 
-const myEventsList = []
-const localizer = momentLocalizer(moment)
-
-class PlanCalendar extends Component{
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      myEventsList
+class PlanCalendar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            myEventsList,
+        };
     }
-  }
 
-  async getCalendar(){
-    const result = await axios({
-        method: "POST",
-        url: "http://localhost:8000/api",
-        data: {
-            query: 
-            `query{
+    async getCalendar() {
+        const result = await axios({
+            method: 'POST',
+            url: 'http://localhost:8000/api',
+            data: {
+                query: `query{
               cal{
                 planId
                 title
@@ -34,39 +31,41 @@ class PlanCalendar extends Component{
                 PlanEnd
               }
             }
-            `
-        },
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Authorization": cookie.load('token')   
-        }
-    })
-    return result.data.data.cal
-  }
+            `,
+            },
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                Authorization: cookie.load('token'),
+            },
+        });
+        result.data.data.cal.map(
+            (event) => (
+                (event.PlanStart = new Date(event.PlanStart)),
+                (event.PlanEnd = new Date(event.PlanEnd)),
+                console.log(event)
+            )
+        );
+        this.setState({ myEventsList: result.data.data.cal });
 
-  async componentDidMount() {
-    const Calendars = await this.getCalendar();
-    
-    this.setState({ 
-        myEventsList: Calendars
-    })  
+        return result.data.data.cal;
+    }
 
-    this.state.myEventsList.map( event => (
-      event.PlanStart = new Date(event.PlanStart), event.PlanEnd = new Date(event.PlanEnd)
-    ))
-    console.log(this.state.myEventsList)
-  }
+    async componentDidMount() {
+        const Calendars = await this.getCalendar();
 
-  async handleSelect({ start, end }){
-    const title = window.prompt('New Event name')
-    console.log(start.toString(), end.toString())
+        this.setState({
+            myEventsList: Calendars,
+        });
+    }
 
-    if (title){
-      const result = await axios({
-        method: "POST",
-        url: "http://localhost:8000/api",
-        data: {
-            query: `mutation{
+    async handleSelect({ start, end }) {
+        const title = window.prompt('New Event name');
+        if (title) {
+            const result = await axios({
+                method: 'POST',
+                url: 'http://localhost:8000/api',
+                data: {
+                    query: `mutation{
               createCalendar(
                 title : "${title}"
                 startplan : "${start.toString()}"
@@ -75,54 +74,56 @@ class PlanCalendar extends Component{
               {
                 ok
               }
-            }`
-        },
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Authorization": cookie.load('token')
+            }`,
+                },
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    Authorization: cookie.load('token'),
+                },
+            });
+            return await this.getCalendar();
         }
-    })
     }
-    
-  }
-     
-  async handledelete(event){
-    const result = await axios({
-      method: "POST",
-      url: "http://localhost:8000/api",
-      data: {
-          query: `mutation{
+
+    async handledelete(event) {
+        const result = await axios({
+            method: 'POST',
+            url: 'http://localhost:8000/api',
+            data: {
+                query: `mutation{
             deleteCalendar(
               planId:"${event.planId}"
             )
             {
               ok
             }
-          }`
-      },
-      headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Authorization": cookie.load('token')
-      }
-    })
-    
-  }
+          }`,
+            },
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                Authorization: cookie.load('token'),
+            },
+        });
+        return await this.getCalendar();
+    }
 
-  render(){
-    return(
-      <div>
-        <Calendar
-        selectable
-          localizer={localizer}
-          events={this.state.myEventsList}
-          startAccessor="PlanStart"
-          endAccessor="PlanEnd"
-          style={{ height: 700}}
-          onSelectEvent={event => this.handledelete(event)}
-          onSelectSlot={this.handleSelect}
-        />
-      </div>
-    );
-  }
+    render() {
+        console.log(this.state.myEventsList);
+        return (
+            <div>
+                <Calendar
+                    selectable
+                    localizer={localizer}
+                    events={this.state.myEventsList}
+                    startAccessor="PlanStart"
+                    endAccessor="PlanEnd"
+                    style={{ height: 700 }}
+                    onSelectEvent={(event) => this.setState(this.handledelete(event))}
+                    onSelectSlot={(event) => this.setState(this.handleSelect(event))}
+                />
+                '
+            </div>
+        );
+    }
 }
-export default PlanCalendar
+export default PlanCalendar;
