@@ -80,14 +80,6 @@ class WriteForm extends Component {
         this.setState({ Show: false });
     }
     async Submit(arg) {
-        /*{
-                    title: this.input_title.current.value, 
-                    content: this.input_content.current.value, 
-                    tag: this.input_tag.current.value,
-                    uuid: new URLSearchParams(window.location.search).get('v'), 
-                    grade1: this.grade1.current.checked, 
-                    grade2: this.grade2.current.checked, 
-                    grade3: this.grade3.current.checked} */
 
         if (arg.grade1) arg.tag += ',1학년';
         if (arg.grade2) arg.tag += ',2학년';

@@ -20,8 +20,7 @@ class CreatePost(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @login_required
-
+    # @login_required
     def mutate(self, info: ResolveInfo, title, content, KindOf, tagKind=None, min_people_count=None, max_people_count=None, times_of_class=None):
         link = Link()
         link.uuid = uuid4()

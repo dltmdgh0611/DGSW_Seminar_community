@@ -19,14 +19,15 @@ class CreateComment(graphene.Mutation):
     def mutate(self, info, content, link_id):
         link = Link(uuid=link_id)
         user = info.context.user
-        comment = Comment(
-            ref_link=link,
-            comment_date=datetime.now(),
-            comment_writer=user,
-            uuid=uuid4(),
-            comment_content=content
-        )
-        comment.save()
+        if content != '':
+            comment = Comment(
+                ref_link=link,
+                comment_date=datetime.now(),
+                comment_writer=user,
+                uuid=uuid4(),
+                comment_content=content
+            )
+            comment.save()
         return CreateComment(ok=True)
 
 
